@@ -5,7 +5,7 @@ face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 img = cv2.imread('../images/image4.jpg')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-faces = face_cascade.detectMultiScale(gray, 1, 5)
+faces = face_cascade.detectMultiScale(gray, 1.1, 5)
 
 cropped_faces = []
 for (x,y,w,h) in faces:
