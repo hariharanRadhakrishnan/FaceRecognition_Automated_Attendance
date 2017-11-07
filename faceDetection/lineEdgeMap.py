@@ -41,13 +41,13 @@ def getLEM(shape,count):
     root.geometry("200x200+300+300")
     root.mainloop()
 
-img = cv2.imread('../images/image3.jpg')
+img = cv2.imread('../images/image2.jpg')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 faces = face_cascade.detectMultiScale(gray, 1.2, 5)
 
 cropped_faces = []
 for (x,y,w,h) in faces:
-    roi_color = copy.copy(img[y:y+h, x:x+w])
+    roi_color = copy.copy(img[y-5:y+5+h, x-5:x+5+w])
     cropped_faces.append(roi_color)
     cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
 
