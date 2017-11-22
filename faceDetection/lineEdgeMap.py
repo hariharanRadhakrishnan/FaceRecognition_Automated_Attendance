@@ -2,8 +2,6 @@ import numpy as np
 from tkinter import Tk, Canvas, Frame, BOTH
 from imutils import face_utils
 import numpy as np
-import argparse
-import imutils
 import dlib
 import cv2
 import copy
@@ -27,7 +25,6 @@ def face_points(gray):
         cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
     return gray,[face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth]
 
-
 def getLEM(shape,count):
     root = Tk()
     f = Frame()
@@ -37,11 +34,19 @@ def getLEM(shape,count):
     for s in shape:
         for i in range(1,len(s)):
             canvas.create_line(s[i-1][0], s[i-1][1], s[i][0], s[i][1])
+        canvas.create_line(s[len(s)-1][0], s[len(s)-1][1], s[0][0], s[0][1])
     canvas.pack(fill=BOTH, expand=1)
     root.geometry("200x200+300+300")
     root.mainloop()
 
-img = cv2.imread('../images/image2.jpg')
+def getLEM(img,shape,count):
+    for s in shape:
+        for i in range(1,len(s)):
+            cv2.line(img,(s[i-1][0], s[i-1][1]),(s[i][0], s[i][1]),(0,0,255))
+        cv2.line(img,(s[len(s)-1][0], s[len(s)-1][1]), (s[0][0], s[0][1]),(0,0,255))
+    return img
+
+img = cv2.imread('../images/s6.jpg')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 faces = face_cascade.detectMultiScale(gray, 1.2, 5)
 
@@ -66,8 +71,8 @@ for i in cropped_faces:
     scale_y = int(height/scale_factor)
     i = cv2.resize(i,(scale_x,scale_y))
     i,shape = face_points(i)
+    i = getLEM(i, shape, count)
     cv2.imshow('img'+str(count),i)
-    getLEM(shape, count)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     count += 1
