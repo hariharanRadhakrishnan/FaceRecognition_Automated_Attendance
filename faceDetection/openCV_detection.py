@@ -9,6 +9,7 @@ import cv2
 import copy
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 def face_points(gray):
@@ -20,18 +21,26 @@ def face_points(gray):
         cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
     return gray
 
-img = cv2.imread('../images/image4.jpg')
+img = cv2.imread('../images/s3.jpg')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-faces = face_cascade.detectMultiScale(gray, 1.2, 5)
+faces = face_cascade.detectMultiScale(gray)
 
 cropped_faces = []
 for (x,y,w,h) in faces:
     roi_color = copy.copy(img[y:y+h, x:x+w])
-    cropped_faces.append(roi_color)
-    cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
+    roi_gray = copy.copy(gray[y:y+h, x:x+w])
+    eyes = eye_cascade.detectMultiScale(roi_gray)
+    if(len(eyes)):
+        cropped_faces.append(roi_color)
+        cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
 
-
+scale = 500
+height, width = gray.shape[:2]
+scale_factor = width/scale
+scale_x = int(width/scale_factor)
+scale_y = int(height/scale_factor)
 count = 0
+gray = cv2.resize(gray,(scale_x,scale_y))
 cv2.imshow('Detected Images',gray)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
@@ -44,12 +53,10 @@ for i in cropped_faces:
     scale_factor = width/scale
     scale_x = int(width/scale_factor)
     scale_y = int(height/scale_factor)
-    i = face_points(i)
     i = cv2.resize(i,(scale_x,scale_y))
+    i = face_points(i)
     cv2.imshow('img'+str(count),i)
     cv2.waitKey(0)
     count += 1
 
-cv2.imshow('initail image',img)
-cv2.waitKey(0)
 cv2.destroyAllWindows()
