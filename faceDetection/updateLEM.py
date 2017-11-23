@@ -16,10 +16,14 @@ file = ''
 # file = open("line_edge_maps.csv",'a')
 
 def dist(a,b):
-    return dist_scaled(a,b)#+dist_tilted(a,b)+dist_skewed(a,b)
+    return ((a[0]-b[0])**2 + (a[1]-b[1])**2)*(1/2.0)
+    # return dist_align(a,b)#+dist_scaled(a,b)+dist_tilted(a,b)+dist_skewed(a,b)
+
 
 #This is the distance measure adjusted to a frame of reference for scaled image
 def dist_scaled(a,b):
+    ref_a = a[int(len(a)/2)]
+    ref_b = b[int(len(b)/2)]
     new_a = ( (a[0]-ref_a[0])**2 + (a[1]-ref_a[1])**2)*(1/2.0)
     new_b = ( (b[0]-ref_b[0])**2 + (b[1]-ref_b[1])**2)*(1/2.0)
 
@@ -34,38 +38,32 @@ def dist_skewed(a,b):
 
 #Compute generic hausdrauff distance
 def hausdroff_distance(set_a,set_b):
-
+    ref_dist = dist(set_a[27],set_b[27])
+    # print()
+    # print('ref_dist',ref_dist)
+    
     #Calculate min from a -> b
-    hausdrauff_dist_a = 0
-    hausdrauff_pts_a=[]
+    hausdrauff_dist_a = []
     for a in set_a:
         min_d = 9999
-        min_pts = []
         for b in set_b:
             distance = dist(a,b)
             if(distance<min_d):
                 min_d=distance
-                min_pts=a,b
-        if(min_d>hausdrauff_dist_a):
-            hausdrauff_dist_a=min_d
-            hausdrauff_pts_a=min_pts
-
+        hausdrauff_dist_a.append(min_d)
+    # print("H A", max(hausdrauff_dist_a))
     #Calculate min from b -> a
-    hausdrauff_dist_b = 0
-    hausdrauff_pts_b=[]
+    hausdrauff_dist_b = []
     for b in set_b:
         min_d = 9999
-        min_pts = []
         for a in set_a:
-            distance = dist(b,a)
-            if(distance<min_d):
+            distance = dist(b,a) 
+            if(min_d > distance):
                 min_d=distance
-                min_pts=b,a
-        if(min_d>hausdrauff_dist_b):
-            hausdrauff_dist_b=min_d
-            hausdrauff_pts_b=min_pts
-
-    return  max(hausdrauff_dist_a,hausdrauff_dist_b)
+        hausdrauff_dist_b.append(min_d)
+    # print("H B", max(hausdrauff_dist_b))
+    # print(max(hausdrauff_dist_a,hausdrauff_dist_b))
+    return  max(max(hausdrauff_dist_a),max(hausdrauff_dist_b))
 
 #Compute Hausdrauff distance for all points,and also shape specific
 def hausdroff(test_points,temp_points):
@@ -148,13 +146,12 @@ def detect(img,gray):
 def get_points(cropped_faces):
 
     features = []
-   
+    count = 0
     for i in cropped_faces:
 
         i = imutils.resize(i,width=200)                                 #Scale the image to needed size
 
         i = onlyFace(i)                                                 #Detect/isolate image based on skin color
-
         shape_img,points = face_points(i)                               #Detect all feature points(68) 
         cv2.imshow('img'+str(count),shape_img)                          #Display image with points
         count += 1
@@ -172,19 +169,32 @@ def recognize(test_points):
 
     #For each template in the database,compare test_feature
     #A template contains name and points corresponsding to it
+    database = []
+    with open("../images/easy/points.csv") as f:
+        lis=[line[:-1].split(',') for line in f] 
+        
+        for i in lis:
+            name=i[0]
+            points=i[1:]
+            points=[[int(x) for x in p.split()] for p in points]
+            # print(points)
+            database.append([name,points])
+
     for template in database:
         #template[0] is name a, template[1] is 68 landmark points
         name,template_points = template
-        hausdroff_list.append(hausdroff(template_points,test_points),name)
-
-
+        hausdroff_list.append([hausdroff(template_points,test_points),name])
 
     #hausdroff_list is list of hausdroff values for each temple with the test image
     #Get the name,hausdrauff_dist for min with respect to first value in this list
     #Here value can either be Hausdroff distance of 1.All points togethor, 2. Weighted summation of each shape, 3.Line Hausdrauff Distance
+    print()
+    for i in hausdroff_list:
+        print(i)
     value,name = min(hausdroff_list)
-
-
+    print()
+    print()
+    threshold = 10000
 
     #If the min value is below a threshold only then return the name
     if(value<threshold):
@@ -210,7 +220,7 @@ def getLEM(shape,count):
 
 #Starting point: Main Function
 def main():
-    img = cv2.imread('../images/sandeep_far.jpg')
+    img = cv2.imread('../images/Test/Hari1.jpg')
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     #Detect thee faces in a picture
