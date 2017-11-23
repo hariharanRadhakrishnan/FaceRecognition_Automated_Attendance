@@ -7,7 +7,8 @@ import numpy as np
 import dlib
 import cv2
 import copy
-
+import csv
+import os
 
 #Face points for one image only
 def face_points(gray):
@@ -72,7 +73,7 @@ def get_points(cropped_faces):
     return features
    
 
-def process(img):
+def process(img,name):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     #Detect thee faces in a picture
@@ -80,16 +81,26 @@ def process(img):
 
     #Obtain points/andmarks for each detected face
     points_set = get_points(cropped_faces)
-
+    update_list=[]
     for points in points_set:
     	#Input name and update points and name into a list into a file
-    	print("points")
+    	update_list.append((name,points))
+    with open("data\points.csv","wb") as f:
+        writer = csv.writer(f)
+        print(update_list)
+        writer.writerows(byte(update_list))
+
 
 def main():
-	path='../images/img ('
-	for i in range(5,13):
-		full_path = path + str(i) +").jpg"
-		img = cv2.imread(full_path)
-		process(img)
+    for file in os.listdir('..\images\easy'):
+        if(file.endswith('.jpg')):
+            name=file[:-4]
+            img = cv2.imread(os.path.join("..\images\easy",file))
+            process(img,name)
+	# path='../images/easy/img ('
+	# for i in range(1,5):
+	# 	full_path = path + str(i) +").jpg"
+	# 	img = cv2.imread(full_path)
+	# 	process(img)
 
 main()
