@@ -149,7 +149,7 @@ def get_points(cropped_faces):
     count = 0
     for i in cropped_faces:
 
-        i = imutils.resize(i,width=200)                                 #Scale the image to needed size
+        i = imutils.resize(i,width=200)                                #Scale the image to needed size
 
         i = onlyFace(i)                                                 #Detect/isolate image based on skin color
         shape_img,points = face_points(i)                               #Detect all feature points(68) 
@@ -163,6 +163,21 @@ def get_points(cropped_faces):
    
     return features
    
+def mean_hausdroff(l):
+    freq={}
+    sum={}
+    for x in l:
+        if(x[1] in freq.keys()):
+            freq[x[1]]+=1
+            sum[x[1]]+=x[0]
+        else:
+            freq[x[1]]=1
+            sum[x[1]]=x[0]
+    result=[]
+    for x in freq.keys():
+        result.append([sum[x]/freq[x],x])
+    return result
+
 #Given a points set for a face, compute their hausdroff distance with all points set of faces in a DB and return the best match name
 def recognize(test_points):
     hausdroff_list=[]
@@ -191,6 +206,11 @@ def recognize(test_points):
     print()
     for i in hausdroff_list:
         print(i)
+    print()
+    # hausdroff_list = mean_hausdroff(hausdroff_list)
+
+    # for i in hausdroff_list:
+        # print(i)
     value,name = min(hausdroff_list)
     print()
     print()
@@ -220,7 +240,7 @@ def getLEM(shape,count):
 
 #Starting point: Main Function
 def main():
-    img = cv2.imread('../images/Test/Hari1.jpg')
+    img = cv2.imread('../images/Test/Boy.jpg')
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     #Detect thee faces in a picture
