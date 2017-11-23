@@ -38,7 +38,6 @@ def dist_skewed(a,b):
 
 #Compute generic hausdrauff distance
 def hausdroff_distance(set_a,set_b):
-    ref_dist = dist(set_a[27],set_b[27])
     # print()
     # print('ref_dist',ref_dist)
     
@@ -69,22 +68,23 @@ def hausdroff_distance(set_a,set_b):
 def hausdroff(test_points,temp_points):
 
     #OPTION 1: compute Hausdrauff distance for all points togethor
-    return hausdroff_distance(test_points,temp_points)
+    # return hausdroff_distance(test_points,temp_points)
 
-    '''
+    
 
     #OPTION 2: compute Hausdrauff distance for individual shape feature and sum it, (add weightage later)
     shapes = ['face_curve','left_eyebro','right_eyebro','nose','left_eye','right_eye','mouth']
+
     temp_shape = build_shape(temp_points)
     test_shape = build_shape(test_points)
-
-    total = 0
-    for i,shape_name in enumerate(shapes):
-        #Use the weightage for the classifiers here for each feature
-        total += hausdroff_distance(test_shape[i],temp_shape[i])
-    return total
     
 
+    #Use the weightage for the classifiers here for each feature
+    total = 0.075*hausdroff_distance(test_shape[0],temp_shape[0]) + 0.006*hausdroff_distance(test_shape[1],temp_shape[1]) + 0.006*hausdroff_distance(test_shape[2],temp_shape[2]) + 0.22*hausdroff_distance(test_shape[3],temp_shape[3]) + 0.13*hausdroff_distance(test_shape[4],temp_shape[4]) + 0.13*hausdroff_distance(test_shape[5],temp_shape[5]) + 0.2*hausdroff_distance(test_shape[6],temp_shape[6])
+    return total
+    # return hausdroff_distance(test_shape[0],temp_shape[0])
+    
+    '''
     #OPTION 3: compute LEM and then do line hausdroff distance
     test_LEM = getLEM(test_shape)
     temp_LEM = getLEM(temp_shape)
@@ -96,16 +96,16 @@ def hausdroff(test_points,temp_points):
 #Using the 68 landmark points identify the shape of the face
 def build_shape(points):
 
-    face_curve = shape[:17]
-    left_eyebro = shape[17:22]
-    right_eyebro = shape[22:27]
-    nose = shape[27:36]
-    left_eye = shape[36:42]
-    right_eye = shape[42:48]
-    mouth = shape[48:]
+    face_curve = points[:17]
+    left_eyebro = points[17:22]
+    right_eyebro = points[22:27]
+    nose = points[27:36]
+    left_eye = points[36:42]
+    right_eye = points[42:48]
+    mouth = points[48:]
 
     shape = face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth
-
+    return shape
 #Face points for one image only
 def face_points(gray):
     predictor = dlib.shape_predictor("facial-landmarks/shape_predictor_68_face_landmarks.dat")
@@ -128,13 +128,13 @@ def detect(img,gray):
     eye_cascade = cv2.CascadeClassifier('cascades/haarcascade_eye.xml')
     faces = face_cascade.detectMultiScale(gray)
     for (x,y,w,h) in faces:
-        roi_color = copy.copy(img[y-5:y+5+h, x-5:x+5+w])
-        roi_gray = copy.copy(gray[y:y+h, x:x+w])
+        roi_color = copy.copy(img[y-5:y+5+h+15, x-5:x+5+w])
+        roi_gray = copy.copy(gray[y:y+h+15, x:x+w])
         eyes = []
         eyes = eye_cascade.detectMultiScale(roi_gray)
         if(len(eyes)):
             cropped_faces.append(roi_color)
-            cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
+            # cv2.rectangle(gray,(x,y),(x+w,y+h+15),(255,0,0),2)
 
     count = 0
     # cv2.imshow('Detected Images',gray)
@@ -185,7 +185,7 @@ def recognize(test_points):
     #For each template in the database,compare test_feature
     #A template contains name and points corresponsding to it
     database = []
-    with open("../images/easy/points.csv") as f:
+    with open("../images/easy/points yes-skin no-skew.csv") as f:
         lis=[line[:-1].split(',') for line in f] 
         
         for i in lis:
@@ -203,17 +203,24 @@ def recognize(test_points):
     #hausdroff_list is list of hausdroff values for each temple with the test image
     #Get the name,hausdrauff_dist for min with respect to first value in this list
     #Here value can either be Hausdroff distance of 1.All points togethor, 2. Weighted summation of each shape, 3.Line Hausdrauff Distance
+    # print()
+    for i in hausdroff_list:
+            print(i)
+
+    for i in range(len(hausdroff_list)-1,-1,-1):
+        if(hausdroff_list[i][0]>=35):
+            hausdroff_list.remove(hausdroff_list[i])
+               
+    
     print()
+    hausdroff_list = mean_hausdroff(hausdroff_list)
+   
     for i in hausdroff_list:
         print(i)
-    print()
-    # hausdroff_list = mean_hausdroff(hausdroff_list)
 
-    # for i in hausdroff_list:
-        # print(i)
     value,name = min(hausdroff_list)
-    print()
-    print()
+    # print()
+    # print()
     threshold = 10000
 
     #If the min value is below a threshold only then return the name
@@ -239,8 +246,8 @@ def getLEM(shape,count):
     root.mainloop()
 
 #Starting point: Main Function
-def main():
-    img = cv2.imread('../images/Test/Boy.jpg')
+def main(ip):
+    img = cv2.imread('../images/Test/'+ip+'.jpg')
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     #Detect thee faces in a picture
@@ -265,4 +272,16 @@ def main():
     cv2.destroyAllWindows()
 
 
-main()
+main('Boy')
+# main('Girl')
+# main('Josh')
+# main('Nikhil')
+# main('Nishanth')
+# main('Parag')     #Accuracy not enough in 68 pts
+# main('Pradeep')
+# main('PratGM')
+# main('Rachan')
+# main('Rhea')
+# main('Ritthwik')
+# main('Sandeep')
+

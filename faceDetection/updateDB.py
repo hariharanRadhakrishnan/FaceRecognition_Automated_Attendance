@@ -56,7 +56,7 @@ def get_points(cropped_faces):
         i = imutils.resize(i,width=200)                                 
 
         #Detect/isolate image based on skin color
-        #i = onlyFace(i)                                                 
+        i = onlyFace(i)                                                 
 
         #Detect all feature points(68) 
         shape_img,points = face_points(i)  
@@ -74,7 +74,7 @@ def get_points(cropped_faces):
 
 #Write name and points into the csv table
 def write_csv(name,points):
-    file =open('..\images\easy\points.csv','a+')
+    file =open('..\images\easy\points yes-skin no-skew.csv','a+')
     file.write(name[:-2])
     for point in points:
         file.write(","+str(point[0])+" "+str(point[1]))
@@ -100,7 +100,7 @@ def main():
     
     for file in os.listdir('..\images\easy'):
         if(file.endswith('.jpg')):
-            name=file[:-4]
+            name=file[:-7]
             img = cv2.imread(os.path.join("..\images\easy",file))
             print(name)
             process(img,name)
