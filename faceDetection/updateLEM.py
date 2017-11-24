@@ -68,20 +68,20 @@ def hausdroff_distance(set_a,set_b):
 def hausdroff(test_points,temp_points):
 
     #OPTION 1: compute Hausdrauff distance for all points togethor
-    # return hausdroff_distance(test_points,temp_points)
+    return hausdroff_distance(test_points,temp_points)
 
     
 
-    #OPTION 2: compute Hausdrauff distance for individual shape feature and sum it, (add weightage later)
-    shapes = ['face_curve','left_eyebro','right_eyebro','nose','left_eye','right_eye','mouth']
+    # #OPTION 2: compute Hausdrauff distance for individual shape feature and sum it, (add weightage later)
+    # shapes = ['face_curve','left_eyebro','right_eyebro','nose','left_eye','right_eye','mouth']
 
-    temp_shape = build_shape(temp_points)
-    test_shape = build_shape(test_points)
+    # temp_shape = build_shape(temp_points)
+    # test_shape = build_shape(test_points)
     
 
-    #Use the weightage for the classifiers here for each feature
-    total = 0.075*hausdroff_distance(test_shape[0],temp_shape[0]) + 0.006*hausdroff_distance(test_shape[1],temp_shape[1]) + 0.006*hausdroff_distance(test_shape[2],temp_shape[2]) + 0.22*hausdroff_distance(test_shape[3],temp_shape[3]) + 0.13*hausdroff_distance(test_shape[4],temp_shape[4]) + 0.13*hausdroff_distance(test_shape[5],temp_shape[5]) + 0.2*hausdroff_distance(test_shape[6],temp_shape[6])
-    return total
+    # #Use the weightage for the classifiers here for each feature
+    # total = 0.075*hausdroff_distance(test_shape[0],temp_shape[0]) + 0.006*hausdroff_distance(test_shape[1],temp_shape[1]) + 0.006*hausdroff_distance(test_shape[2],temp_shape[2]) + 0.22*hausdroff_distance(test_shape[3],temp_shape[3]) + 0.13*hausdroff_distance(test_shape[4],temp_shape[4]) + 0.13*hausdroff_distance(test_shape[5],temp_shape[5]) + 0.2*hausdroff_distance(test_shape[6],temp_shape[6])
+    # return total
     # return hausdroff_distance(test_shape[0],temp_shape[0])
     
     '''
@@ -126,6 +126,7 @@ def detect(img,gray):
     cropped_faces = []
     face_cascade = cv2.CascadeClassifier('cascades/haarcascade_frontalface_default.xml')
     eye_cascade = cv2.CascadeClassifier('cascades/haarcascade_eye.xml')
+
     faces = face_cascade.detectMultiScale(gray)
     for (x,y,w,h) in faces:
         roi_color = copy.copy(img[y-5:y+5+h+15, x-5:x+5+w])
@@ -151,7 +152,7 @@ def get_points(cropped_faces):
 
         i = imutils.resize(i,width=200)                                #Scale the image to needed size
 
-        i = onlyFace(i)                                                 #Detect/isolate image based on skin color
+        
         shape_img,points = face_points(i)                               #Detect all feature points(68) 
         cv2.imshow('img'+str(count),shape_img)                          #Display image with points
         count += 1
@@ -203,14 +204,15 @@ def recognize(test_points):
     #hausdroff_list is list of hausdroff values for each temple with the test image
     #Get the name,hausdrauff_dist for min with respect to first value in this list
     #Here value can either be Hausdroff distance of 1.All points togethor, 2. Weighted summation of each shape, 3.Line Hausdrauff Distance
-    # print()
-    for i in hausdroff_list:
-            print(i)
+    # # print()
+    # 
 
     for i in range(len(hausdroff_list)-1,-1,-1):
-        if(hausdroff_list[i][0]>=35):
+        if(hausdroff_list[i][0]>=200):
             hausdroff_list.remove(hausdroff_list[i])
-               
+        
+    for i in hausdroff_list:
+        print(i)       
     
     print()
     hausdroff_list = mean_hausdroff(hausdroff_list)
@@ -248,12 +250,18 @@ def getLEM(shape,count):
 #Starting point: Main Function
 def main(ip):
     img = cv2.imread('../images/Test/'+ip+'.jpg')
+    #Detect/isolate image based on skin color
+    img = onlyFace(img)                                                 
+    img = imutils.resize(img,width=600)
+    cv2.imshow("i",img)
+    cv2.waitKey(0)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    #Detect thee faces in a picture
+
+    #Detect thee faces in a picture, Haar Cascade
     cropped_faces = detect(img,gray)
 
-    #Obtain points/andmarks for each detected face
+    #Obtain points/andmarks for each detected face, dlib facial landmarks
     points_set = get_points(cropped_faces)
 
     #For each detected and landmarked face, Do
@@ -271,7 +279,7 @@ def main(ip):
 
     cv2.destroyAllWindows()
 
-
+# main('Hari')
 main('Boy')
 # main('Girl')
 # main('Josh')
