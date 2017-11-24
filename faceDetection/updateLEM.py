@@ -104,7 +104,7 @@ def build_shape(points):
     right_eye = points[42:48]
     mouth = points[48:]
 
-    shape = face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth
+    shape = [face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth]
     return shape
 #Face points for one image only
 def face_points(gray):
@@ -272,10 +272,11 @@ def main(ip):
         #getLEM(shape, count)                                            
 
         #Recignize the feature from DB
-        recognized_name = recognize(points)
+        build_shape(points)
+        # recognized_name = recognize(points)
 
-        #Display the name of the recognized feature
-        print(recognized_name)
+        # #Display the name of the recognized feature
+        # print(recognized_name)
 
     cv2.destroyAllWindows()
 
