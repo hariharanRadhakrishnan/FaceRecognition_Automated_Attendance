@@ -1,5 +1,5 @@
 # import cv2
-from HausdorffMethod import hausdorff
+from .HausdorffMethod import hausdorff
 
 #Find the mean of hausdorff list, to remove duplicates
 def mean_key_value_list(l):
@@ -39,7 +39,7 @@ def recognize(test_points,method):
             hausdorff_list.remove(hausdorff_list[i])
 
     #If no images matched closely, then the hausdorff list is empty
-    if(len(hausdorff_list)==0)
+    if(len(hausdorff_list)==0):
         return "Not Found"
 
     #Find the mean of hausdorff list, to remove duplicates

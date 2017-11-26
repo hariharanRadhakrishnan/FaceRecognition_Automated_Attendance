@@ -1,5 +1,5 @@
 import copy
-# import cv2
+import cv2
 
 def detect(img,gray):
     #Detect Faces

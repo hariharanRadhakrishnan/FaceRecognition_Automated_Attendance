@@ -2,6 +2,10 @@ import numpy as np
 import math
 import copy
 
+def line_hausdorff_distance(lineSet1,lineSet2):
+	return max(LHD_set_lines(lineSet1,lineSet2),LHD_set_lines(lineSet2,lineSet1))
+
+
 def penalty(angle):
 	return angle**2;
 
@@ -103,8 +107,6 @@ def LHD_set_lines(lineSet1,lineSet2):
 		LHDSum = sum([line1Len * min([LHD(line1,line2) for line2 in lineSet2])])
 		return LHDSum/totalLength
 
-def line_hausdroff_distance(lineSet1,lineSet2):
-	return max(LHD_set_lines(lineSet1,lineSet2),LHD_set_lines(lineSet2,lineSet1))
 
 
 # lineSet1 = [[[27, 110],[31, 129]],[[36, 147],[42, 165]],[[54, 179],[68, 192]],[[85, 202],[105, 203]],[[124, 200],[139, 188]],[[151, 173],[160, 157]],[[165, 138],[168, 119]],[[169, 100],[168, 80]]]

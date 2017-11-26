@@ -1,7 +1,7 @@
-from FeatureBuild import build_dlib_features
-from FeatureBuild import build_voronoi_features
-from PointHausdorff import point_hausdorff_distance
-from LineHausdorff import line_hausdorff_distance
+from .FeatureBuild import build_dlib_features
+from .FeatureBuild import build_voronoi_features
+from .PointHausdorff import point_hausdorff_distance
+from .LineHausdorff import line_hausdorff_distance
 
 
 #Convert 68 points into linesets for Line hausdorff distance
