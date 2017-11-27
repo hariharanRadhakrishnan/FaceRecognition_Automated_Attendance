@@ -1,11 +1,14 @@
 import copy
 import cv2
 
-def detect(img,gray):
+def detect(img):
     #Detect Faces
     cropped_faces = []
-    face_cascade = cv2.CascadeClassifier('../Data/cascades/haarcascade_frontalface_default.xml')
-    eye_cascade = cv2.CascadeClassifier('../Data/cascades/haarcascade_eye.xml')
+    face_cascade = cv2.CascadeClassifier("C:/Users/sande/Desktop/CV/sandeep/Data/cascades/haarcascade_frontalface_default.xml")
+    eye_cascade = cv2.CascadeClassifier('C:/Users/sande/Desktop/CV/sandeep/Data/cascades/haarcascade_eye.xml')
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # cv2.imshow("skin-isolation",img)
+    # cv2.waitKey(0)  
 
     faces = face_cascade.detectMultiScale(gray)
     for (x,y,w,h) in faces:

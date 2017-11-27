@@ -14,8 +14,8 @@ def convert(s):
     return lineSet
 
 def hausdorff(test_points,temp_points,method):
-
     distance = 0
+    method = int(method)
 
     #OPTION 1: compute Hausdrauff distance for all points togethor
     if(method==1):
@@ -37,7 +37,6 @@ def hausdorff(test_points,temp_points,method):
         for i,feature in enumerate(features):
             distance +=  feature_weights[i]*point_hausdorff_distance(test_features[i],temp_features[i])
         
-        distance = total
 
     #OPTION 3: Obtain features as a list and then find line hausdorff distance
     elif(method==3):

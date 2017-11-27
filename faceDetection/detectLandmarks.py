@@ -2,7 +2,8 @@ import imutils
 import dlib
 import cv2
 import copy
-
+from imutils import face_utils
+import imutils
 
 
 def get_points(cropped_faces):
@@ -29,11 +30,11 @@ def get_points(cropped_faces):
 
 #Face points for one image only
 def face_points(gray):
-    predictor = dlib.shape_predictor("../Data/Landmarks/shape_predictor_68_face_landmarks.dat")
+    predictor = dlib.shape_predictor("C:/Users/sande/Desktop/CV/sandeep/Data/Landmarks/shape_predictor_68_face_landmarks.dat")
     b,r = gray.shape[:2]
     rect = dlib.rectangle(left=0,top=0,right=r,bottom=b)
     points = predictor(gray, rect)
-    points = imutils.face_utils.shape_to_np(points)
+    points = face_utils.shape_to_np(points)
     
     # for (x, y) in points:
     #     cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)

@@ -3,7 +3,6 @@ from tkinter import Tk, Canvas, Frame, BOTH
 from imutils import face_utils
 import imutils
 from detectSkinColor import onlyFace
-import numpy as np
 import dlib
 import cv2
 import copy
@@ -73,7 +72,7 @@ def get_points(cropped_faces):
 
 #Write name and points into the csv table
 def write_csv(name,points):
-    file =open('..\images\easy\points yes-skinbefore no-skew.csv','a+')
+    file =open('skewskinpoints.csv','a+')
     file.write(name[:-2])
     for point in points:
         file.write(","+str(point[0])+" "+str(point[1]))
@@ -97,11 +96,13 @@ def process(img,name):
 
 def main():
     
-    for file in os.listdir('..\images\easy'):
+    for file in os.listdir('../Data/images/All'):
         if(file.endswith('.jpg')):
-            name=file[:-7]
-            img = cv2.imread(os.path.join("..\images\easy",file))
-             #Detect/isolate image based on skin color
+            name, ext = os.path.splitext(file)
+            img = cv2.imread(os.path.join("../Data/images/All",file))
+            #Detect/isolate image based on skin color
+            # print(np.shape(img))
+            name = name[:-4]
             img = onlyFace(img)  
             print(name)
             process(img,name)

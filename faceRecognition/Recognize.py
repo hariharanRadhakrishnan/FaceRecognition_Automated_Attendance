@@ -1,5 +1,6 @@
 # import cv2
 from .HausdorffMethod import hausdorff
+from .Database import database
 
 #Find the mean of hausdorff list, to remove duplicates
 def mean_key_value_list(l):
@@ -20,9 +21,10 @@ def mean_key_value_list(l):
 #Recognize the detected image
 def recognize(test_points,method):
     hausdorff_list=[]
+    templates = database()
 
     #For each template in the database,compare test_feature; 
-    for template in database:
+    for template in templates:
         name,template_points = template
         #Here hausdrauff_dist value can either be hausdorff distance of 
         #1.All points togethor, 
