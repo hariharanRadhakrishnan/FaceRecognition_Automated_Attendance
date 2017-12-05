@@ -52,7 +52,7 @@ def get_points(cropped_faces):
     count = 0
     for i in cropped_faces:
     	#Scale the image to needed size
-        i = imutils.resize(i,width=200)                                 
+        i = imutils.resize(i,width=600)                                 
 
                                                       
 
@@ -72,7 +72,7 @@ def get_points(cropped_faces):
 
 #Write name and points into the csv table
 def write_csv(name,points):
-    file =open('skewskinpoints.csv','a+')
+    file =open('600size.csv','a+')
     file.write(name[:-2])
     for point in points:
         file.write(","+str(point[0])+" "+str(point[1]))

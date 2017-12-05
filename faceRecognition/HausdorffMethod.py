@@ -1,17 +1,18 @@
 from .FeatureBuild import build_dlib_features
 from .FeatureBuild import build_voronoi_features
 from .PointHausdorff import point_hausdorff_distance
-from .LineHausdorff import line_hausdorff_distance
+from .LineHausdorff import primaryLHD
+from .LineHausdorff import convert
 
 
-#Convert 68 points into linesets for Line hausdorff distance
-def convert(s):
-    s = s.split(",")
-    s = [[int(x) for x in i.split()] for i in s]
-    lineSet = []
-    for i in range(1,len(s)):
-        lineSet.append([s[i-1],s[i]])
-    return lineSet
+# #Convert 68 points into linesets for Line hausdorff distance
+# def convert(s):
+#     s = s.split(",")
+#     s = [[int(x) for x in i.split()] for i in s]
+#     lineSet = []
+#     for i in range(1,len(s)):
+#         lineSet.append([s[i-1],s[i]])
+#     return lineSet
 
 def hausdorff(test_points,temp_points,method):
     distance = 0
@@ -42,9 +43,10 @@ def hausdorff(test_points,temp_points,method):
     elif(method==3):
         temp_lineset = convert(temp_points)
         test_lineset = convert(test_points)
+        # print(convert(test_points))
 
         #Calculate the Line hausdorff distance         
-        distance = line_hausdorff_distance(temp_points,test_points)
+        distance = primaryLHD(test_lineset,temp_lineset)
 
     #OPTION 4: Obtain voronoi features as a list and find line hausdorff distance
     elif(method==4):
@@ -52,6 +54,6 @@ def hausdorff(test_points,temp_points,method):
         test_voronoi_features = build_voronoi_features(test_points)
 
         #Calculate the Line hausdorff distance
-        distance = line_hausdorff_distance(temp_voronoi_features,test_voronoi_features)
+        distance = primaryLHD(temp_voronoi_features,test_voronoi_features)
 
     return distance

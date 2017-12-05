@@ -1,7 +1,7 @@
 def database():
     #Extract content from database
     templates = []
-    with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/skewskinpoints.csv") as f:
+    with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/skewskinpointsnew.csv") as f:
         #Extract name and points from database
         lis=[line[:-1].split(',') for line in f]        
         for i in lis:

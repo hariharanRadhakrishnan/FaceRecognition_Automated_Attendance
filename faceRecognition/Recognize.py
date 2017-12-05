@@ -19,7 +19,7 @@ def mean_key_value_list(l):
     return result
 
 #Recognize the detected image
-def recognize(test_points,method):
+def recognize(test_points,method,display=0):
     hausdorff_list=[]
     templates = database()
 
@@ -27,29 +27,32 @@ def recognize(test_points,method):
     for template in templates:
         name,template_points = template
         #Here hausdrauff_dist value can either be hausdorff distance of 
-        #1.All points togethor, 
+        #1. All points togethor, 
         #2. Weighted summation of each feature, 
-        #3.Line Hausdrauff Distance of features, 
+        #3. Line Hausdrauff Distance of features, 
         #4. Line hausdorff Distance of verenoi
-        hausdorff_list.append([hausdorff(template_points,test_points,method),name])
+        li = [hausdorff(template_points,test_points,method),name]
+        if(display==1):
+            print(li)
+        hausdorff_list.append(li)
 
 
     #Remove all hausdorff values which ae greater than threshold as they are not present in out database
-    threshold = 200
-    for i in range(len(hausdorff_list)-1,-1,-1):
-        if(hausdorff_list[i][0]>=threshold):
-            hausdorff_list.remove(hausdorff_list[i])
+    if(method==1 or method==2):
+        threshold = 200
+        for i in range(len(hausdorff_list)-1,-1,-1):
+            if(hausdorff_list[i][0]>=threshold):
+                hausdorff_list.remove(hausdorff_list[i])
 
     #If no images matched closely, then the hausdorff list is empty
     if(len(hausdorff_list)==0):
         return "Not Found"
 
-    #Find the mean of hausdorff list, to remove duplicates
-    hausdorff_list = mean_key_value_list(hausdorff_list)
+    if(method==1 or method==2):
+        #Find the mean of hausdorff list, to remove duplicates
+        hausdorff_list = mean_key_value_list(hausdorff_list)
    
-    # for i in hausdorff_list:
-    #     print(i)
-
+   
     #If multiple matches, find the min distance match from the database
     value,name = min(hausdorff_list)
 
