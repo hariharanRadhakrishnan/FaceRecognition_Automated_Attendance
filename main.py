@@ -16,7 +16,7 @@ def main_common(img,method,display=0):
 	if(method==1 or method==2):
 		img = imutils.resize(img,width=200)    
 	else:                               
-		img = imutils.resize(img,width=1500)
+		img = imutils.resize(img,width=800)
 	
 	# cv2.imshow("skin-isolation",img)
 	# cv2.waitKey(0)
@@ -31,7 +31,7 @@ def main_common(img,method,display=0):
 	# print("\n3.Check Landmark Detection")
 
 
-
+	recognized_name = "Not found"
 	#For each landmark detected image , recognize it by using the csv database
 	for points in points_set:
 		recognized_name = recognize(points,method,display)
@@ -80,7 +80,7 @@ def main_All(method):
 			print()
 	print()
 	print("CORRECT : ",count_correct)
-	print("WRONG   : ",incount_correct)
+	print("WRONG   : ",count_incorrect)
 
 	accuracy = count_correct/float(count_correct+count_incorrect)
 	accuracy = accuracy*100
@@ -96,8 +96,8 @@ def main():
 		os.system('cls')
 		main_Individual()
 	else:
-		print("Method 1:")
-		main_All(1)
+		# print("Method 1:")
+		# main_All(1)
 		# print("Method 2:")
 		# main_All(2)
 		print("Method 3:")
