@@ -3,7 +3,7 @@
 import cv2
 import numpy as np
 import random
-
+import copy
 # Check if a point is inside a rectangle
 def rect_contains(rect, point) :
     if point[0] < rect[0] :
@@ -18,7 +18,7 @@ def rect_contains(rect, point) :
 
 # Draw a point
 def draw_point(img, p, color ) :
-    cv2.circle( img, p, 2, color, cv2.cv.CV_FILLED, cv2.CV_AA, 0 )
+    cv2.circle( img, p, 2, color, 1, 8, 0 )
 
 
 # Draw delaunay triangles
@@ -30,16 +30,16 @@ def draw_delaunay(img, subdiv, delaunay_color ) :
     r = (0, 0, size[1], size[0])
 
     for t in triangleList :
-
+        # print(t)
         pt1 = (t[0], t[1])
         pt2 = (t[2], t[3])
         pt3 = (t[4], t[5])
 
         if rect_contains(r, pt1) and rect_contains(r, pt2) and rect_contains(r, pt3) :
 
-            cv2.line(img, pt1, pt2, delaunay_color, 1, cv2.CV_AA, 0)
-            cv2.line(img, pt2, pt3, delaunay_color, 1, cv2.CV_AA, 0)
-            cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.CV_AA, 0)
+            cv2.line(img, pt1, pt2, delaunay_color, 1, 8, 0)
+            cv2.line(img, pt2, pt3, delaunay_color, 1, 8, 0)
+            cv2.line(img, pt3, pt1, delaunay_color, 1, 8, 0)
 
 
 # Draw voronoi diagram
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     # Rectangle to be used with Subdiv2D
     size = img.shape
     rect = (0, 0, size[1], size[0])
-
+    # print(rect)
     # Create an instance of Subdiv2D
     subdiv = cv2.Subdiv2D(rect);
 
@@ -95,11 +95,11 @@ if __name__ == '__main__':
     with open("obama.txt") as file :
         for line in file :
             x, y = line.split()
-            points.append((int(x), int(y)))
+            points.append([int(x), int(y)])
 
     # Insert points into subdiv
     for p in points :
-        subdiv.insert(p)
+        subdiv.insert(tuple(p))
 
         # Show animation
         if animate :
@@ -110,7 +110,7 @@ if __name__ == '__main__':
             cv2.waitKey(100)
 
     # Draw delaunay triangles
-    draw_delaunay( img, subdiv, (255, 255, 255) );
+    draw_delaunay(img, subdiv, (255, 255, 255) );
 
     # Draw points
     for p in points :
