@@ -27,8 +27,8 @@ def recognize(test_points,method,img_shape,display=0):
     prev_name =""
     for template in templates:
         name,template_points = template
-        if(name==prev_name):
-            continue
+        # if(name==prev_name):
+        #     continue
         prev_name = name
         #Here hausdrauff_dist value can either be hausdorff distance of 
         #1. All points togethor, 

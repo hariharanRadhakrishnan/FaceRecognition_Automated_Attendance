@@ -46,7 +46,7 @@ def main_Individual():
 	choice = input("Do you want to test an image? Y/N : ")
 
 	while(choice.upper() == 'Y' or choice.upper() == 'YES'):
-		os.system('cls')
+		# os.system('cls')
 		img = input("\nType test image name: ")
 		img = cv2.imread('Data/images/Test/'+img+'.jpg')
 		# method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Verenoi Line Hausdroff Distance\nChoose method of Recognition: \n:")
@@ -72,7 +72,7 @@ def main_All(method):
 			name, ext = os.path.splitext(file)
 			print("Running : ",file)
 			img = cv2.imread(os.path.join("Data/images/Test",file))
-			rec_name = main_common(img,method)
+			rec_name = main_common(img,method,1)
 			if(name==rec_name):
 				count_correct+=1
 			else:
@@ -101,10 +101,10 @@ def main():
 		# main_All(1)
 		# print("Method 2:")
 		# main_All(2)
-		print("Method 3:")
-		main_All(3)
-		# print("Method 4:")
-		# main_All(4)
+		# print("Method 3:")
+		# main_All(3)
+		print("Method 4:")
+		main_All(4)
 
 if __name__ == "__main__":
 	main()
