@@ -17,6 +17,8 @@ def main_common(img,method,display=0):
 		img = imutils.resize(img,width=200)    
 	else:                               
 		img = imutils.resize(img,width=800)
+
+	img_shape=img.shape
 	
 	# cv2.imshow("skin-isolation",img)
 	# cv2.waitKey(0)
@@ -34,7 +36,7 @@ def main_common(img,method,display=0):
 	recognized_name = "Not found"
 	#For each landmark detected image , recognize it by using the csv database
 	for points in points_set:
-		recognized_name = recognize(points,method,display)
+		recognized_name = recognize(points,method,img_shape,display)
 		# print("\n4.Check Face Recognition")
 	# Display the name of the recognized feature
 	return recognized_name
@@ -48,11 +50,10 @@ def main_Individual():
 		img = input("\nType test image name: ")
 		img = cv2.imread('Data/images/Test/'+img+'.jpg')
 		# method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Verenoi Line Hausdroff Distance\nChoose method of Recognition: \n:")
-		print("Recognized method 1:",main_common(img,1,1))
+		# print("Recognized method 1:",main_common(img,1,1))
 		# print("Recognized method 2:",main_common(img,2))
-		print()
-		print("Recognized method 3:",main_common(img,3,1))
-		# print("Recognized method 4:",main_common(img,4))
+		# print("Recognized method 3:",main_common(img,3,1))
+		print("Recognized method 4:",main_common(img,4,1))
 
 	    
 

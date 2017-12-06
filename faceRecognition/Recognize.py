@@ -19,19 +19,23 @@ def mean_key_value_list(l):
     return result
 
 #Recognize the detected image
-def recognize(test_points,method,display=0):
+def recognize(test_points,method,img_shape,display=0):
     hausdorff_list=[]
     templates = database()
 
     #For each template in the database,compare test_feature; 
+    prev_name =""
     for template in templates:
         name,template_points = template
+        if(name==prev_name):
+            continue
+        prev_name = name
         #Here hausdrauff_dist value can either be hausdorff distance of 
         #1. All points togethor, 
         #2. Weighted summation of each feature, 
         #3. Line Hausdrauff Distance of features, 
         #4. Line hausdorff Distance of verenoi
-        li = [hausdorff(template_points,test_points,method),name]
+        li = [hausdorff(template_points,test_points,method,img_shape),name]
         if(display==1):
             print(li)
         hausdorff_list.append(li)
