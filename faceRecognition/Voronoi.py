@@ -3,7 +3,7 @@ import numpy as np
 import random
 import copy
 
-def get_delaunay_lineset(points, shapeX, shapeY) :
+def get_delaunay_lineset(points, shapeX, shapeY,name,i) :
 	points = copy.deepcopy(points)
 	rect = (0,0,shapeX,shapeY)
 	subdiv = cv2.Subdiv2D(rect);
@@ -24,6 +24,7 @@ def get_delaunay_lineset(points, shapeX, shapeY) :
 			veronoiLEM.append(line2)
 		if(line3 not in veronoiLEM):	
 			veronoiLEM.append(line3)
+	# print(i,name,veronoiLEM)
 	return veronoiLEM
 
 # points = input()

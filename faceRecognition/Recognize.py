@@ -1,6 +1,9 @@
 # import cv2
 from .HausdorffMethod import hausdorff
 from .Database import database
+from joblib import Parallel, delayed
+from time import sleep
+import time
 
 #Find the mean of hausdorff list, to remove duplicates
 def mean_key_value_list(l):
@@ -18,29 +21,36 @@ def mean_key_value_list(l):
         result.append([sum[x]/freq[x],x])
     return result
 
+
+
+def wai(template_points,test_points,method,img_shape,name,i):
+    start_time = time.time()
+    val = hausdorff(template_points,test_points,method,img_shape,name,i)
+
+    print(i,name,val,end="\t")
+    print("--- %s seconds ---" % (time.time() - start_time))
+    sleep(1)
+    return [val,name]
+
+
 #Recognize the detected image
-def recognize(test_points,method,img_shape,display=0):
+def recognize(test_points,method,img_shape):
     hausdorff_list=[]
     templates = database()
 
     #For each template in the database,compare test_feature; 
-    prev_name =""
-    for template in templates:
-        name,template_points = template
-        # if(name==prev_name):
-        #     continue
-        prev_name = name
-        #Here hausdrauff_dist value can either be hausdorff distance of 
-        #1. All points togethor, 
-        #2. Weighted summation of each feature, 
-        #3. Line Hausdrauff Distance of features, 
-        #4. Line hausdorff Distance of verenoi
-        li = [hausdorff(template_points,test_points,method,img_shape),name]
-        if(display==1):
-            print(li)
-        hausdorff_list.append(li)
+    #Here hausdrauff_dist value can either be hausdorff distance of 
+    #1. All points togethor, 
+    #2. Weighted summation of each feature, 
+    #3. Line Hausdrauff Distance of features, 
+    #4. Line hausdorff Distance of verenoi
 
+    #Non parallel version
+    # hausdorff_list = [ [hausdorff(template_points,test_points,method,img_shape),name] for name,template_points in templates ]
 
+    #Parallel version
+    hausdorff_list =  Parallel(n_jobs=-1,verbose=5)(delayed(wai)(temp[1],test_points,method,img_shape,temp[0],i) for i,temp in enumerate(templates)) 
+    
     #Remove all hausdorff values which ae greater than threshold as they are not present in out database
     if(method==1 or method==2):
         threshold = 200
