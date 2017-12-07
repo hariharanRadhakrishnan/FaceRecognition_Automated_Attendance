@@ -7,7 +7,7 @@ def build_dlib_features(points):
     nose = points[27:36]
     left_eye = points[36:42]
     right_eye = points[42:48]
-    mouth = points[48:]
+    mouth = points[48:58]
 
     features = [face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth]
     return features
