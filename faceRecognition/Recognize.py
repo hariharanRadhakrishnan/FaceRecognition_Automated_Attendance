@@ -24,12 +24,10 @@ def mean_key_value_list(l):
 
 
 def wai(template_points,test_points,method,img_shape,name,i):
-    start_time = time.time()
     val = hausdorff(template_points,test_points,method,img_shape,name,i)
 
-    print(i,name,val,end="\t")
-    print("--- %s seconds ---" % (time.time() - start_time))
-    sleep(1)
+    print(i,name,val)
+    
     return [val,name]
 
 
@@ -45,12 +43,18 @@ def recognize(test_points,method,img_shape):
     #3. Line Hausdrauff Distance of features, 
     #4. Line hausdorff Distance of verenoi
 
-    #Non parallel version
-    # hausdorff_list = [ [hausdorff(template_points,test_points,method,img_shape),name] for name,template_points in templates ]
+    # start_time = time.time()
+    # #Non parallel version
+    # hausdorff_list = [ [hausdorff(template_points,test_points,method,img_shape,name,i),name] for i,(name,template_points) in enumerate(templates) ]
+    # print("--- %s Non Parallel seconds ---" % (time.time() - start_time))
 
+    start_time = time.time()
     #Parallel version
-    hausdorff_list =  Parallel(n_jobs=-1,verbose=5)(delayed(wai)(temp[1],test_points,method,img_shape,temp[0],i) for i,temp in enumerate(templates)) 
-    
+    hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(temp[1],test_points,method,img_shape,temp[0],i) for i,temp in enumerate(templates)) 
+    print("--- %s Parallel seconds ---" % (time.time() - start_time))
+    for i in hausdorff_list:
+        print(i)
+
     #Remove all hausdorff values which ae greater than threshold as they are not present in out database
     if(method==1 or method==2):
         threshold = 200

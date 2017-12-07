@@ -57,7 +57,7 @@ def main_Individual(choice):
 def main_All():
 	count_correct =0
 	count_incorrect =0
-	method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Verenoi Line Hausdroff Distance\nChoose method of Recognition: \n:")
+	method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Voronoi Line Hausdroff Distance\nChoose method of Recognition: \n:")
 	os.system('cls')
 	for file in os.listdir('Data/images/Test'):
 		if(file.endswith('.jpg')):
@@ -85,7 +85,7 @@ def main():
 	choice = int(input("Select your choice: "))
 	print()
 	if(choice==1):
-		main_Individual(1)
+		main_Individual("Y")
 	else:
 		main_All()
 

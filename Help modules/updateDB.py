@@ -52,7 +52,7 @@ def get_points(cropped_faces):
     count = 0
     for i in cropped_faces:
     	#Scale the image to needed size
-        i = imutils.resize(i,width=600)                                 
+        i = imutils.resize(i,width=200)                                 
 
                                                       
 
@@ -72,8 +72,9 @@ def get_points(cropped_faces):
 
 #Write name and points into the csv table
 def write_csv(name,points):
-    file =open('600size.csv','a+')
-    file.write(name[:-2])
+    
+    file =open('easydb.csv','a+')
+    file.write(name)
     for point in points:
         file.write(","+str(point[0])+" "+str(point[1]))
     file.write("\n")
@@ -96,16 +97,15 @@ def process(img,name):
 
 def main():
     
-    for file in os.listdir('../Data/images/All'):
+    for file in os.listdir('../Data/images/easy'):
         if(file.endswith('.jpg')):
             name, ext = os.path.splitext(file)
-            img = cv2.imread(os.path.join("../Data/images/All",file))
+            img = cv2.imread(os.path.join("../Data/images/easy",file))
             #Detect/isolate image based on skin color
             # print(np.shape(img))
-            name = name[:-4]
             img = onlyFace(img)  
-            print(name)
-            process(img,name)
+            print(name[:-4])
+            process(img,name[:-4])
     
     # with open("../images/easy/points.csv") as f:
     #     lis=[line[:-1].split(',') for line in f] 
