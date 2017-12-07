@@ -1,7 +1,18 @@
-def database():
+def database(skew,laugh):
     #Extract content from database
     templates = []
-    with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/easydb.csv") as f:
+    file_name =""
+    if(skew=="straight"):
+        if(laugh=="laugh"):
+            file_name = "laughdb.csv"
+        else:
+            file_name = "normaldb.csv"
+    elif(skew=="left"):
+        file_name="leftdb.csv"
+    elif(skew=="right"):
+        file_name="rightdb.csv"
+
+    with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/"+file_name) as f:
         #Extract name and points from database
         lis=[line[:-1].split(',') for line in f]        
         for i in lis:
@@ -11,5 +22,3 @@ def database():
             templates.append([name,points])
     return templates
 
-def train_database():
-	pass

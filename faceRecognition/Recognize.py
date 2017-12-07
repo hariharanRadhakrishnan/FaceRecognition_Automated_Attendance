@@ -32,41 +32,34 @@ def wai(template_points,test_points,method,img_shape,name,i):
 
 
 #Recognize the detected image
-def recognize(test_points,method,img_shape):
+def recognize(test_points,method,img_shape,skew,laugh):
     hausdorff_list=[]
-    templates = database()
-
-    #For each template in the database,compare test_feature; 
-    #Here hausdrauff_dist value can either be hausdorff distance of 
-    #1. All points togethor, 
-    #2. Weighted summation of each feature, 
-    #3. Line Hausdrauff Distance of features, 
-    #4. Line hausdorff Distance of verenoi
-
-    # start_time = time.time()
-    # #Non parallel version
-    # hausdorff_list = [ [hausdorff(template_points,test_points,method,img_shape,name,i),name] for i,(name,template_points) in enumerate(templates) ]
-    # print("--- %s Non Parallel seconds ---" % (time.time() - start_time))
+    
+    templates = database(skew,laugh)
 
     start_time = time.time()
-    #Parallel version
-    hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(temp[1],test_points,method,img_shape,temp[0],i) for i,temp in enumerate(templates)) 
-    print("--- %s Parallel seconds ---" % (time.time() - start_time))
-    for i in hausdorff_list:
-        print(i)
 
-    #Remove all hausdorff values which ae greater than threshold as they are not present in out database
-    if(method==1 or method==2):
-        threshold = 200
-        for i in range(len(hausdorff_list)-1,-1,-1):
-            if(hausdorff_list[i][0]>=threshold):
-                hausdorff_list.remove(hausdorff_list[i])
+    #Non parallel version
+    if(method==4):
+        hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
+        print("--- %s Non Parallel seconds ---" % (time.time() - start_time))
+
+    #Parallel version
+    else:
+        hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates)) 
+        print("--- %s Parallel seconds ---" % (time.time() - start_time))
+
+
+    #Remove all hausdorff values which ae greater than threshold as they are not present in out database , supposed to be done in LHD
+    # for i in range(len(hausdorff_list)-1,-1,-1):
+    #     if(hausdorff_list[i][0]>=threshold):
+    #         hausdorff_list.remove(hausdorff_list[i])
 
     #If no images matched closely, then the hausdorff list is empty
     if(len(hausdorff_list)==0):
         return "Not Found"
 
-    if(method==1 or method==2):
+    if(not(method==4)):
         #Find the mean of hausdorff list, to remove duplicates
         hausdorff_list = mean_key_value_list(hausdorff_list)
    

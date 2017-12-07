@@ -6,6 +6,9 @@ from faceDetection.detectFace import detect
 from faceDetection.detectLandmarks import get_points
 from faceRecognition.Recognize import recognize
 import os
+from imutils import face_utils
+
+
 
 def main_common(img,method):
 	#Detect/isolate image based on skin color
@@ -33,7 +36,8 @@ def main_common(img,method):
 
 	#For each landmark detected image , recognize it by using the csv database
 	for points in points_set:
-		recognized_name = recognize(points,method,img_shape)
+		point,skew,laugh = points
+		recognized_name = recognize(point,method,img_shape,skew,laugh)
 
 	# Return the name of the recognized feature
 	return recognized_name
