@@ -6,6 +6,17 @@ from faceDetection.detectFace import detect
 from faceDetection.detectLandmarks import get_points
 from faceRecognition.Recognize import recognize
 import os
+from imutils import face_utils
+
+def getLEM(img,points):
+	shape = face_utils.shape_to_np(points)
+	for s in shape:
+		for i in range(1,len(s)):
+			cv2.line(img,(s[i-1][0], s[i-1][1]),(s[i][0], s[i][1]),(0,0,255))
+			cv2.line(img,(s[len(s)-1][0], s[len(s)-1][1]), (s[0][0], s[0][1]),(0,0,255))
+	cv2.imshow("a",img)
+	cv2.waitKey(0)
+    
 
 def main_common(img,method,display=0):
 	#Detect/isolate image based on skin color
@@ -34,6 +45,7 @@ def main_common(img,method,display=0):
 
 	#For each landmark detected image , recognize it by using the csv database
 	for points in points_set:
+		getLEM(img,points)
 		recognized_name = recognize(points,method,display)
 		# print("\n4.Check Face Recognition")
 	# Display the name of the recognized feature
