@@ -15,29 +15,34 @@ def main_common(img,method):
 	img = onlyFace(img)         
 	# print("\n1.Check Skin Detection")
 
+	
+
+	img_shape=img.shape
+	
+	
+
+	#Detect The face/s using facial and eye Haar cascades
+	cropped_faces = detect(img)
+
 	#Resize the skin-isolated image     
 	if(method==1 or method==2):
 		img = imutils.resize(img,width=200)    
 	else:                               
 		img = imutils.resize(img,width=800)
 
-	img_shape=img.shape
-	
 	# cv2.imshow("skin-isolation",img)
 	# cv2.waitKey(0)
-
-	#Detect The face/s using facial and eye Haar cascades
-	cropped_faces = detect(img)
 
 	#Detect the facial landmarks on the detected face using dlib data
 	points_set = get_points(cropped_faces)
 
-	recognized_name = "Not found"
+	recognized_name = []
 
 	#For each landmark detected image , recognize it by using the csv database
 	for points in points_set:
 		point,skew,laugh = points
-		recognized_name = recognize(point,method,img_shape,skew,laugh)
+		print("Skew:",skew,"\tLaugh:",laugh)
+		recognized_name.append(recognize(point,method,img_shape,skew,laugh))
 
 	# Return the name of the recognized feature
 	return recognized_name
@@ -69,7 +74,7 @@ def main_All():
 			print("Running : ",file)
 			img = cv2.imread(os.path.join("Data/images/Test",file))
 			rec_name = main_common(img,method)
-			if(name==rec_name):
+			if(name[:-4]==rec_name):
 				count_correct+=1
 			else:
 				count_incorrect+=1

@@ -4,13 +4,14 @@ def database(skew,laugh):
     file_name =""
     if(skew=="straight"):
         if(laugh=="laugh"):
-            file_name = "laughdb.csv"
+            file_name = "LAUGH_DB.csv"
         else:
-            file_name = "normaldb.csv"
+            file_name = "NORMAL_DB.csv"
     elif(skew=="left"):
-        file_name="leftdb.csv"
+        file_name="LEFT_DB.csv"
     elif(skew=="right"):
-        file_name="rightdb.csv"
+        file_name="RIGHT_DB.csv"
+    # file_name = "skewskinpointsnew.csv"
 
     with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/"+file_name) as f:
         #Extract name and points from database

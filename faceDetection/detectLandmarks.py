@@ -21,7 +21,7 @@ def get_points(cropped_faces):
     features = []
     for i in cropped_faces:
         #Scale the image to needed size
-        i = imutils.resize(i,width=200)                                
+        i = imutils.resize(i,width=650)                                
 
         #Detect all feature points(68) 
         shape_img,points,skew,laugh = face_points(i)          
@@ -39,12 +39,12 @@ def detect_skew(left,right,center):
     right_ratio = abs(center-right)
 
     diff = left_ratio - right_ratio
-
-    if(abs(diff)<=15):
+    # print("SKEW:",diff)
+    if(abs(diff)<=35):
         return "straight"
-    elif(diff>15):
+    elif(diff>35):
         return "left"
-    elif(diff<-15):
+    elif(diff<-35):
         return "right"
 
 def detect_laugh(mouth):
@@ -52,7 +52,8 @@ def detect_laugh(mouth):
     median = statistics.median(mouth)
     smile = 0
     for i in mouth:
-        if(abs(i-median) >=12.5):
+        if(abs(i-median) >=31.5):
+            print(abs(i-median),end=" ")
             smile+=1
     if(smile>1):
         return "laugh"
@@ -80,8 +81,11 @@ def face_points(gray):
     
     skew = detect_skew(face_curve[1][0],face_curve[-1][0],nose[2][0])
     laugh = detect_laugh(mouth)
-    # for (x, y) in points:
-    #     cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
+    for (x, y) in points:
+        cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
+    cv2.imshow("land",gray)
+    cv2.waitKey(0)
+
 
         
     return gray,points.tolist(),skew,laugh

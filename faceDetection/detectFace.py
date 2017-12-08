@@ -1,5 +1,6 @@
 import copy
 import cv2
+import imutils
 
 def detect(img):
     #Detect Faces
@@ -18,10 +19,11 @@ def detect(img):
         eyes = eye_cascade.detectMultiScale(roi_gray)
         if(len(eyes)):
             cropped_faces.append(roi_color)
-            # cv2.rectangle(gray,(x,y),(x+w,y+h+15),(255,0,0),2)
+            cv2.rectangle(gray,(x,y),(x+w,y+h+15),(255,0,0),2)
 
+    gray = imutils.resize(gray,width=800)
     count = 0
-    # cv2.imshow('Detected Images',gray)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow('Detected Images',gray)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return cropped_faces
