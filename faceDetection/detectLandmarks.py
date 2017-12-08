@@ -12,9 +12,9 @@ def getLEM(img,shape):
         for i in range(1,len(s)):
             cv2.line(img,(s[i-1][0], s[i-1][1]),(s[i][0], s[i][1]),(0,0,255))
         cv2.line(img,(s[len(s)-1][0], s[len(s)-1][1]), (s[0][0], s[0][1]),(0,0,255))
-    cv2.imshow("a",img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow("a",img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 def get_points(cropped_faces):
 
@@ -40,11 +40,11 @@ def detect_skew(left,right,center):
 
     diff = left_ratio - right_ratio
     # print("SKEW:",diff)
-    if(abs(diff)<=35):
+    if(abs(diff)<=120):
         return "straight"
-    elif(diff>35):
+    elif(diff>120):
         return "left"
-    elif(diff<-35):
+    elif(diff<-120):
         return "right"
 
 def detect_laugh(mouth):
@@ -52,8 +52,8 @@ def detect_laugh(mouth):
     median = statistics.median(mouth)
     smile = 0
     for i in mouth:
-        if(abs(i-median) >=31.5):
-            print(abs(i-median),end=" ")
+        print(abs(i-median),end=" ")
+        if(abs(i-median) >=55):
             smile+=1
     if(smile>1):
         return "laugh"
@@ -81,11 +81,11 @@ def face_points(gray):
     
     skew = detect_skew(face_curve[1][0],face_curve[-1][0],nose[2][0])
     laugh = detect_laugh(mouth)
-    for (x, y) in points:
-        cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
-    cv2.imshow("land",gray)
-    cv2.waitKey(0)
-
+    # for (x, y) in points:
+    #     cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
+    # cv2.imshow("land",gray)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
         
     return gray,points.tolist(),skew,laugh

@@ -39,10 +39,10 @@ def main_common(img,method):
 	recognized_name = []
 
 	#For each landmark detected image , recognize it by using the csv database
-	for points in points_set:
-		point,skew,laugh = points
-		print("Skew:",skew,"\tLaugh:",laugh)
-		recognized_name.append(recognize(point,method,img_shape,skew,laugh))
+	# for points in points_set:
+	# 	point,skew,laugh = points
+	# 	print("Skew:",skew,"\tLaugh:",laugh)
+	# 	recognized_name.append(recognize(point,method,img_shape,skew,laugh))
 
 	# Return the name of the recognized feature
 	return recognized_name

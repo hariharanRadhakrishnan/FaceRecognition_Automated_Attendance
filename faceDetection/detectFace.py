@@ -23,7 +23,7 @@ def detect(img):
 
     gray = imutils.resize(gray,width=800)
     count = 0
-    cv2.imshow('Detected Images',gray)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('Detected Images',gray)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     return cropped_faces
