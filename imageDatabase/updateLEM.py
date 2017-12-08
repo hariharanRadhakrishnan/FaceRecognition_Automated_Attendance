@@ -26,7 +26,7 @@ def face_points(gray):
     mouth = shape[48:]
     for (x, y) in shape:
         cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
-    return gray,[face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth]
+    return gray,shape
 
 def getLEM(shape,count):
     root = Tk()
@@ -34,49 +34,47 @@ def getLEM(shape,count):
     f.master.title("Lines "+str(count))
     f.pack(fill=BOTH, expand=1)
     canvas = Canvas(f)
-    for s in shape:
-        for i in range(1,len(s)):
-            canvas.create_line(s[i-1][0], s[i-1][1], s[i][0], s[i][1])
-        canvas.create_line(s[len(s)-1][0], s[len(s)-1][1], s[0][0], s[0][1])
+    for i in range(1,len(shape)):
+        canvas.create_line(shape[i-1][0], shape[i-1][1], shape[i][0], shape[i][1])  
     canvas.pack(fill=BOTH, expand=1)
     root.geometry("200x200+300+300")
     root.mainloop()
 
-img = cv2.imread('../../face_images/image44.jpg')
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-faces = face_cascade.detectMultiScale(gray)
-file = ''
-# file = open("line_edge_maps.csv",'a')
+for img_num in range(1,128):
+    print("image",img_num)
+    img = cv2.imread('../../face_images/image'+str(img_num)+'.jpg')
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray)
+    file = ''
+    file = open("line_edge_maps.csv",'w')
 
-cropped_faces = []
-for (x,y,w,h) in faces:
-    roi_color = copy.copy(img[y-5:y+5+h, x-5:x+5+w])
-    roi_gray = copy.copy(gray[y:y+h, x:x+w])
-    eyes = []
-    eyes = eye_cascade.detectMultiScale(roi_gray)
-    if(len(eyes)):
-        cropped_faces.append(roi_color)
-        cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
+    cropped_faces = []
+    for (x,y,w,h) in faces:
+        roi_color = copy.copy(img[y-5:y+5+h, x-5:x+5+w])
+        roi_gray = copy.copy(gray[y:y+h, x:x+w])
+        eyes = []
+        eyes = eye_cascade.detectMultiScale(roi_gray)
+        if(len(eyes)):
+            cropped_faces.append(roi_color)
+            cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
 
-count = 0
-# cv2.imshow('Detected Images',gray)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-shape = []
-for i in cropped_faces:
-    i = imutils.resize(i,width=200)
-    i = onlyFace(i)
-    i,shape = face_points(i)
-    cv2.imshow('img'+str(count),i)
-    getLEM(shape, count)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    count += 1
-    y = input("Update y/n?")
-    if(y=='y' or y=='Y'):
-        for s in shape:
-            for point in s:
+    count = 0
+    # cv2.imshow('Detected Images',gray)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    shape = []
+    for i in cropped_faces:
+        i = imutils.resize(i,width=200)
+        i = onlyFace(i)
+        i,shape = face_points(i)
+        cv2.imshow('img'+str(count),i)
+        getLEM(shape, count)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        count += 1
+        y = input("Update y/n?")
+        if(y=='y' or y=='Y'):
+            for point in shape:
                 file.write(str(point[0])+" "+str(point[1])+",")
-            file.write(";")
-        name = input("Give Name")
-        file.write(name+"\n")
+            name = input("Give Name : ")
+            file.write(name+"\n")

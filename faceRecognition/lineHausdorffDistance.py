@@ -148,41 +148,43 @@ def LHD(line1,line2):
 	return (penalty(angleDiff)**4 + perDist**4 + parDist**4 )**0.25
 	# print(perDist)
 
-def LHD_set_lines(lineSet1,lineSet2):
+def LHD_set_lines(lineSet1,lineSet2,p=False):
 	totalLength = 0
 	LHDSum = 0
 	for line1 in lineSet1:
 		line1Len = dist(line1[0],line1[1])
 		totalLength += line1Len
 		l = [LHD(line1,line2) for line2 in lineSet2]
-		# print(l,end="\n\n")
+		if(p):
+			print(lineSet1.index(line1),line1, "______________________________")
+			for i in range(len(l)):
+				print(lineSet2[i], " :: ", l[i])
+			print("______________________________", line1Len, min(l), l.index(min(l)), lineSet2[l.index(min(l))],"______________________________")
 		LHDSum += line1Len * min(l)
+	if(p):
+		print("______________________________________________________________________________________")
 	return LHDSum/totalLength
 
 def primaryLHD(lineSet1,lineSet2):
 	set1 = LHD_set_lines(lineSet1,lineSet2)
 	set2 = LHD_set_lines(lineSet2,lineSet1)
-	# print("SET VALUES" , set1,set2)
 	return max(set1,set2)
 
+def newLHD(lineSet1,lineSet2):
+	LHDSum = 0
+	totalLength = 0
+	for i in range(len(lineSet1)):
+		line1 = lineSet1[i]
+		line2 = lineSet2[i]
+		line1Len = dist(line1[0],line1[1])
+		totalLength += line1Len
+		LHDSum += line1Len * LHD(line1,line2)
+	return LHDSum/totalLength
 
-# line1 = [[[8,10],[-9,-20]]]
-# line2 = [[[4,5],[8,10]]]
-lineSet1 = convert(input())# [[[27, 110],[31, 129]],[[36, 147],[42, 165]],[[54, 179],[68, 192]],[[85, 202],[105, 203]],[[124, 200],[139, 188]],[[151, 173],[160, 157]],[[165, 138],[168, 119]],[[169, 100],[168, 80]]]
-lineSet2 = convert(input())# [[[27, 111],[31, 130]],[[36, 147],[43, 163]],[[54, 178],[66, 191]],[[82, 201],[101, 203]],[[121, 201],[135, 189]],[[147, 173],[157, 156]],[[163, 138],[166, 119]],[[166, 100],[165, 81]]]
-lineSet3 = convert(input())# [[[34, 125],[39, 144]],[[46, 161],[57, 177]],[[70, 191],[86, 201]],[[107, 202],[128, 201]],[[145, 192],[158, 178]],[[169, 161],[176, 143]],[[179, 123],[179, 103]]]
-# lineSet4 = [[[26, 92], [28, 110]], [[28, 110], [32, 127]], [[32, 127], [37, 144]], [[37, 144], [43, 161]], [[43, 161], [54, 176]], [[54, 176], [67, 186]], [[67, 186], [86, 196]], [[86, 196], [105, 197]], [[105, 197], [124, 194]], [[124, 194], [140, 185]], [[140, 185], [154, 174]], [[154, 174], [165, 158]], [[165, 158], [171, 138]], [[171, 138], [174, 119]], [[174, 119], [175, 98]], [[175, 98], [173, 79]]]
-# lineSet5 = [[[29, 81], [30, 100]], [[30, 100], [31, 119]], [[31, 119], [33, 139]], [[33, 139], [38, 158]], [[38, 158], [49, 175]], [[49, 175], [62, 190]], [[62, 190], [80, 202]], [[80, 202], [101, 204]], [[101, 204], [123, 202]], [[123, 202], [140, 190]], [[140, 190], [153, 175]], [[153, 175], [163, 159]], [[163, 159], [169, 140]], [[169, 140], [172, 120]], [[172, 120], [172, 100]], [[172, 100], [172, 81]]]
-# lineSet6 = [[[23, 75], [23, 97]], [[23, 97], [25, 118]], [[25, 118], [28, 138]], [[28, 138], [33, 158]], [[33, 158], [44, 177]], [[44, 177], [57, 192]], [[57, 192], [75, 203]], [[75, 203], [96, 204]], [[96, 204], [117, 202]], [[117, 202], [132, 191]], [[132, 191], [143, 176]], [[143, 176], [152, 160]], [[152, 160], [159, 141]], [[159, 141], [164, 123]], [[164, 123], [168, 103]], [[168, 103], [169, 82]]]
-print(lineSet1,lineSet2,lineSet3,sep="\n\n",end="\n\n")
-print(primaryLHD(lineSet1,lineSet1))
-print(lineSet1,lineSet2,lineSet3,sep="\n\n",end="\n\n")
-print(primaryLHD(lineSet1,lineSet3))
-print(lineSet1,lineSet2,lineSet3,sep="\n\n",end="\n\n")
-print(primaryLHD(lineSet2,lineSet3))
-print(lineSet1,lineSet2,lineSet3,sep="\n\n",end="\n\n")
-# print(primaryLHD(line1,line2))
-
+def newPrimaryLHD(lineSet1,lineSet2):
+	set1 = newLHD(lineSet1,lineSet2)
+	set2 = newLHD(lineSet2,lineSet1)
+	return max(set1,set2)
 
 # fig=plt.figure()
 # ax=fig.add_subplot(111)
@@ -193,12 +195,10 @@ print(lineSet1,lineSet2,lineSet3,sep="\n\n",end="\n\n")
 # 	    *zip(*itertools.chain.from_iterable(itertools.combinations(l, 2))),
 # 	    color = 'brown', marker = 'o')
 
-
 # for l in lineSet2:
 # 	plt.plot(
 # 	    *zip(*itertools.chain.from_iterable(itertools.combinations(l, 2))),
 # 	    color = 'yellow', marker = 'o')
-
 
 # for l in lineSet3:
 # 	plt.plot(
@@ -206,5 +206,3 @@ print(lineSet1,lineSet2,lineSet3,sep="\n\n",end="\n\n")
 # 	    color = 'green', marker = 'o')
 
 # plt.show()
-# print(primaryLHD(copy.deepcopy(lineSet4),copy.deepcopy(lineSet4)))
-# print(primaryLHD(copy.deepcopy(lineSet6),copy.deepcopy(lineSet6)))
