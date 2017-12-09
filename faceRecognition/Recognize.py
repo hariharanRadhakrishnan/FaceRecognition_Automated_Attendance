@@ -36,11 +36,13 @@ def recognize(img_data):
 
 
     #Non parallel version
-    if(method==4):
+    if(int(method)==4):
         hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
 
     #Parallel version
     else:
+        
+        print("not here")
         hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates)) 
 
 
