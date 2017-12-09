@@ -4,15 +4,50 @@ import copy
 import matplotlib.pyplot as plt
 import itertools 
 
+def addFullCurve(points):
+	lineset = []
+	for i in range(1,len(points)):
+		lineset.append([points[i-1],points[i]])
+	lineset.append([points[0],points[len(points)-1]])
+	return lineset
+
+def buildLineset(shape):
+	face_curve = shape[:17]
+	left_eyebro = shape[17:22]
+	right_eyebro = shape[22:27]
+	nose = shape[27:36]
+	left_eye = shape[36:42]
+	right_eye = shape[42:48]
+	mouth = shape[48:]
+	lineset = []
+	lineset.extend(addFullCurve(face_curve))
+	lineset.extend(addFullCurve(left_eyebro))
+	lineset.extend(addFullCurve(right_eyebro))
+	lineset.append([shape[21],shape[22]])
+	lineset.append([shape[21],shape[27]])
+	lineset.append([shape[22],shape[27]])
+	lineset.extend(addFullCurve(nose))
+	lineset.append([shape[35],shape[30]])
+	lineset.extend(addFullCurve(left_eye))
+	lineset.extend(addFullCurve(right_eye))
+	lineset.extend(addFullCurve(mouth))
+	lineset.append([shape[51],shape[57]])
+	lineset.append([shape[48],shape[54]])
+	lineset.append([shape[1],shape[15]])
+	lineset.append([shape[2],shape[14]])
+	lineset.append([shape[3],shape[13]])
+	lineset.append([shape[4],shape[12]])
+	lineset.append([shape[5],shape[11]])
+	lineset.append([shape[6],shape[10]])
+	lineset.append([shape[7],shape[9]])
+	x_mid = (shape[19][0]+shape[24][0])/2
+	y_mid = (shape[19][1]+shape[24][1])/2
+	lineset.append([[x_mid,y_mid],shape[8]])
+	return lineset
+
 def convert(s):
 	l = [[int(x) for x in i.split()] for i in s.split(',')]
-	lineset = []
-	for i in range(1,len(l)):
-		line = []
-		line.append(l[i-1])
-		line.append(l[i])
-		lineset.append(line)
-	lineset.append([l[len(l)-1],l[0]])
+	lineset = buildLineset(l)
 	return lineset
 
 def penalty(angle):
@@ -189,11 +224,12 @@ def newPrimaryLHD(lineSet1,lineSet2):
 	set2 = newLHD(lineSet2,lineSet1)
 	return max(set1,set2)
 
-# lineSet1 = eval(input())
-# lineSet2 = eval(input())
+# lineSet1 = convert(input())
+# lineSet2 = convert(input())
 
 # print(newPrimaryLHD(lineSet1,lineSet2))
 # print(primaryLHD(lineSet1,lineSet2))
+
 # fig=plt.figure()
 # ax=fig.add_subplot(111)
 # ax.xaxis.set_ticks_position('top')
@@ -206,7 +242,7 @@ def newPrimaryLHD(lineSet1,lineSet2):
 # for l in lineSet2:
 # 	plt.plot(
 # 	    *zip(*itertools.chain.from_iterable(itertools.combinations(l, 2))),
-# 	    color = 'yellow', marker = 'o')
+# 	    color = 'red', marker = 'o')
 
 # for l in lineSet3:
 # 	plt.plot(
