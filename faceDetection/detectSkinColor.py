@@ -13,7 +13,7 @@ def onlyFace(img):
 
 
 	lower = np.array([0, 30, 30], dtype = "uint8")
-	upper = np.array([55, 255, 255], dtype = "uint8")
+	upper = np.array([35, 255, 255], dtype = "uint8")
 
 	# lower = np.array([150, 10, 10], dtype = "uint8")
 	# upper = np.array([220, 255, 255], dtype = "uint8")
