@@ -1,0 +1,89 @@
+[3.0943797764937266, 'rittwik', 'rittwik']
+[3.0943797764937266, 'rittwik', 'rittwik']
+[5.9553529811332169, 'rittwik', 'parag-left-laugh']
+Accuracy for  rittwik 66.66666666666666
+
+[2.7144310408569217, 'sanjay', 'sanjay']
+[2.7144310408569217, 'sanjay', 'sanjay']
+[3.516832540976583, 'sanjay', 'sanjay']
+Accuracy for  sanjay 100.0
+
+[1.1206224876271822, 'nikhil', 'nikhil']
+[1.1206224876271822, 'nikhil', 'nikhil']
+[4.634752670844887, 'nikhil', 'girl-left']
+[4.1940730410932794, 'nikhil', 'parag-laugh']
+[5.2580858385105351, 'nikhil', 'nikhil']
+Accuracy for  nikhil 60.0
+
+[0.97750630165140862, 'vishal', 'vishal']
+[0.97750630165140862, 'vishal', 'vishal']
+[4.954181665835808, 'vishal', 'sandeep-left']
+[3.2736355673565911, 'vishal', 'girl']
+Accuracy for  vishal 50.0
+
+[2.4676766050172443, 'rhea', 'rhea-laugh']
+[0.92282148424992982, 'rhea', 'rhea']
+[0.92282148424992982, 'rhea', 'rhea']
+[4.8162961441542054, 'rhea-right', 'rhea-right']
+[5.6098299468493087, 'rhea-left', 'rhea']
+[1.469783507000169, 'rhea', 'rhea']
+[1.469783507000169, 'rhea', 'rhea']
+[4.4576679490651605, 'rhea', 'rhea-laugh']
+Accuracy for  rhea 100.0
+
+[2.1094299171124469, 'girl', 'girl']
+[2.1094299171124469, 'girl', 'girl']
+[3.6721053072086534, 'girl', 'rittwik']
+[3.8684759819412724, 'girl-left', 'hari-left']
+[4.6012896367430587, 'girl-left-laugh', 'parag-left-laugh']
+Accuracy for  girl-left-laugh 40.0
+
+[1.793793734152664, 'nishanth', 'nishanth']
+[1.793793734152664, 'nishanth', 'nishanth']
+[6.0335545837947864, 'nishanth-left', 'pradeep-left']
+[3.150040137435651, 'nishanth-laugh', 'parag-laugh']
+[3.2953301121824752, 'nishanth', 'pradeep']
+Accuracy for  nishanth 40.0
+
+[2.5813570827603627, 'pratheek_GM', 'nikhil']
+Accuracy for  pratheek_GM 0.0
+
+[3.3061538013063698, 'pradeep', 'pradeep']
+[2.4626824719338791, 'pradeep', 'nishanth']
+[3.9574039499573241, 'pradeep-left', 'sandeep-left']
+[3.5579064754572216, 'pradeep', 'pradeep']
+Accuracy for  pradeep 50.0
+
+[3.7971710549680662, 'parag', 'pradeep']
+[3.9200632565127473, 'parag', 'rhea']
+[2.6886702662942858, 'parag-left-laugh', 'parag-left-laugh']
+[2.6886702662942858, 'parag-left-laugh', 'parag-left-laugh']
+[2.551792465536789, 'parag-laugh', 'rachan-laugh']
+Accuracy for  parag-laugh 40.0
+
+[2.2527225126482411, 'rhea', 'rachan']
+[4.8162961441542054, 'rhea-right', 'rhea-right']
+[2.4676766050172443, 'rhea-laugh', 'rhea']
+Accuracy for  rhea-laugh 66.66666666666666
+
+[2.3765496473013643, 'rachan', 'rachan']
+[2.3199852760932225, 'rachan', 'rachan']
+[1.366484817388369, 'rachan', 'rachan']
+[1.366484817388369, 'rachan', 'rachan']
+[2.551792465536789, 'rachan-laugh', 'parag-laugh']
+Accuracy for  rachan-laugh 80.0
+
+[3.9574039499573241, 'sandeep-left', 'pradeep-left']
+Accuracy for  sandeep-left 0.0
+
+[4.5015025315143253, 'pratheek_B', 'pratheek_B']
+[4.5015025315143253, 'pratheek_B', 'pratheek_B']
+[5.3136483954659344, 'pratheek_B-left', 'hari-left']
+[2.6261431489068507, 'pratheek_B-laugh', 'pratheek_B-laugh']
+[2.6261431489068507, 'pratheek_B-laugh', 'pratheek_B-laugh']
+Accuracy for  pratheek_B-laugh 80.0
+
+[1.5630493557160463, 'hari', 'hari']
+[1.5630493557160463, 'hari', 'hari']
+[3.8684759819412724, 'hari-left', 'girl-left']
+[3.432785087649636, 'hari-laugh', 'parag-laugh']

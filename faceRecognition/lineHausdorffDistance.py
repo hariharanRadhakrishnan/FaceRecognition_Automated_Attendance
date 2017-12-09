@@ -170,7 +170,7 @@ def primaryLHD(lineSet1,lineSet2):
 	set2 = LHD_set_lines(lineSet2,lineSet1)
 	return max(set1,set2)
 
-def newLHD(lineSet1,lineSet2):
+def newLHD(lineSet1,lineSet2,p=False):
 	LHDSum = 0
 	totalLength = 0
 	for i in range(len(lineSet1)):
@@ -178,7 +178,10 @@ def newLHD(lineSet1,lineSet2):
 		line2 = lineSet2[i]
 		line1Len = dist(line1[0],line1[1])
 		totalLength += line1Len
-		LHDSum += line1Len * LHD(line1,line2)
+		LHDval = LHD(line1,line2)
+		LHDSum += line1Len * LHDval
+		if(p):
+			print(line1, line2, LHDval, LHDSum)
 	return LHDSum/totalLength
 
 def newPrimaryLHD(lineSet1,lineSet2):
@@ -186,6 +189,11 @@ def newPrimaryLHD(lineSet1,lineSet2):
 	set2 = newLHD(lineSet2,lineSet1)
 	return max(set1,set2)
 
+# lineSet1 = eval(input())
+# lineSet2 = eval(input())
+
+# print(newPrimaryLHD(lineSet1,lineSet2))
+# print(primaryLHD(lineSet1,lineSet2))
 # fig=plt.figure()
 # ax=fig.add_subplot(111)
 # ax.xaxis.set_ticks_position('top')

@@ -15,7 +15,7 @@ def convert(s):
 	lineset.append([l[len(l)-1],l[0]])
 	return lineset,name
 
-file = open("../imageDatabase/line_edge_maps.csv",'r')
+file = open("../imageDatabase/line_edge_maps2.csv",'r')
 f = file.read()
 f = f.split('\n')
 
@@ -25,7 +25,11 @@ accu = 0
 count = 0
 for i in range(len(f)-1):
 	li, preNm = convert(f[i])
-	if(prevNm != preNm):
+	x = preNm.split('-')
+	x = x[0]
+	y = prevNm.split('-')
+	y = y[0]
+	if(y != x):
 		if(count):
 			print("Accuracy for ", prevNm , (accu/count) * 100, end="\n\n")
 		accu = 0
@@ -35,12 +39,12 @@ for i in range(len(f)-1):
 	for j in range(len(f)-1):
 		if(j != i):
 			newData, newNm = convert(f[j]) 
-			findDist = newPrimaryLHD(li,newData)
+			findDist = primaryLHD(li,newData)
 			fin.append([findDist, preNm, newNm])
 	if(fin):
 		l = min(fin)
 		print(l)
 		l = fin.index(l)
-		if(fin[l][1] == fin[l][2]):
+		if((fin[l][1].split('-'))[0] == (fin[l][2].split('-'))[0]):
 			accu += 1
 		count += 1
