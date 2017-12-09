@@ -15,13 +15,9 @@ def onlyFace(img):
 	lower = np.array([0, 30, 30], dtype = "uint8")
 	upper = np.array([55, 255, 255], dtype = "uint8")
 
-	# lower = np.array([150, 10, 10], dtype = "uint8")
-	# upper = np.array([220, 255, 255], dtype = "uint8")
-
 
 	converted = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 	skinMask = cv2.inRange(converted, lower, upper)
 	skin = cv2.bitwise_and(img, img, mask = skinMask)
-	
 	return skin
 

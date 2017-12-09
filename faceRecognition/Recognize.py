@@ -1,9 +1,7 @@
-# import cv2
 from .HausdorffMethod import hausdorff
 from .Database import database
 from joblib import Parallel, delayed
-from time import sleep
-import time
+
 
 #Find the mean of hausdorff list, to remove duplicates
 def mean_key_value_list(l):
@@ -22,32 +20,28 @@ def mean_key_value_list(l):
     return result
 
 
-
+#Method to handle parallelism
 def wai(template_points,test_points,method,img_shape,name,i):
     val = hausdorff(template_points,test_points,method,img_shape,name,i)
-
     print(i,name,val)
-    
     return [val,name]
 
 
 #Recognize the detected image
-def recognize(test_points,method,img_shape,skew,laugh):
+def recognize(img_data):
+    method,test_points,skew,laugh,img_shape = img_data
     hausdorff_list=[]
     
     templates = database(skew,laugh)
 
-    start_time = time.time()
 
     #Non parallel version
     if(method==4):
         hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
-        print("--- %s Non Parallel seconds ---" % (time.time() - start_time))
 
     #Parallel version
     else:
         hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates)) 
-        print("--- %s Parallel seconds ---" % (time.time() - start_time))
 
 
     #Remove all hausdorff values which ae greater than threshold as they are not present in out database , supposed to be done in LHD
@@ -55,13 +49,14 @@ def recognize(test_points,method,img_shape,skew,laugh):
     #     if(hausdorff_list[i][0]>=threshold):
     #         hausdorff_list.remove(hausdorff_list[i])
 
+
     #If no images matched closely, then the hausdorff list is empty
     if(len(hausdorff_list)==0):
         return "Not Found"
 
-    if(not(method==4)):
-        #Find the mean of hausdorff list, to remove duplicates
-        hausdorff_list = mean_key_value_list(hausdorff_list)
+    #Find the mean of hausdorff list, to remove duplicates
+    # if(method==1 or method==2):
+    #     hausdorff_list = mean_key_value_list(hausdorff_list)
    
    
     #If multiple matches, find the min distance match from the database

@@ -12,6 +12,3 @@ def build_dlib_features(points):
     features = [face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth]
     return features
 
-#Using the 68 points build the voronoi face mesh
-def build_voronoi_features(points):
-	pass

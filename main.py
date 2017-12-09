@@ -3,50 +3,40 @@ import cv2
 import sys
 from faceDetection.detectSkinColor import onlyFace
 from faceDetection.detectFace import detect
-from faceDetection.detectLandmarks import get_points
+from faceDetection.detectLandmarks import get_img_data
 from faceRecognition.Recognize import recognize
 import os
 from imutils import face_utils
-
+import time
 
 
 def main_common(img,method):
+
+	recognized_name = []
+
 	#Detect/isolate image based on skin color
-	img = onlyFace(img)         
-	# print("\n1.Check Skin Detection")
+	# img = onlyFace(img)         
 
-	
-
-	img_shape=img.shape
-	
-	
 
 	#Detect The face/s using facial and eye Haar cascades
 	cropped_faces = detect(img)
 
-	#Resize the skin-isolated image     
-	if(method==1 or method==2):
-		img = imutils.resize(img,width=200)    
-	else:                               
-		img = imutils.resize(img,width=800)
-
-	# cv2.imshow("skin-isolation",img)
-	# cv2.waitKey(0)
 
 	#Detect the facial landmarks on the detected face using dlib data
-	points_set = get_points(cropped_faces)
+	image_set = get_img_data(cropped_faces)
 
-	recognized_name = []
-
+	
 	#For each landmark detected image , recognize it by using the csv database
-	# for points in points_set:
-	# 	point,skew,laugh = points
-	# 	print("Skew:",skew,"\tLaugh:",laugh)
-	# 	recognized_name.append(recognize(point,method,img_shape,skew,laugh))
+	for image in image_set:
+		points,skew,laugh,img_shape = image
+		img_data = [method,points,skew,laugh,img_shape]
+		print("Skew:",skew,"\tLaugh:",laugh,end="  ")
+		start_time = time.time()
+		recognized_name.append(recognize(img_data))
+		print("--- %s Seconds ---" % (time.time() - start_time))
 
 	# Return the name of the recognized feature
 	return recognized_name
-
 
 def main_Individual(choice):
 
@@ -61,8 +51,6 @@ def main_Individual(choice):
 		choice = input("\nDo you want to test another image? Y/N: ")
 		cv2.destroyAllWindows()
 
-
-
 def main_All():
 	count_correct =0
 	count_incorrect =0
@@ -74,11 +62,14 @@ def main_All():
 			print("Running : ",file)
 			img = cv2.imread(os.path.join("Data/images/Test",file))
 			rec_name = main_common(img,method)
-			if(name[:-4]==rec_name):
+			pr = ''
+			if(name[:-4]==rec_name[0]):
+				pr = 'Correct'
 				count_correct+=1
 			else:
+				pr = 'Wrong'
 				count_incorrect+=1
-			print("Recognized name: ",rec_name)
+			print("Recognized name: ",rec_name[0],pr)
 			print()
 	print()
 	print("CORRECT : ",count_correct)

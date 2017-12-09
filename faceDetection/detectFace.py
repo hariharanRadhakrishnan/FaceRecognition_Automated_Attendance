@@ -1,15 +1,15 @@
 import copy
 import cv2
 import imutils
+from .Display import display
 
 def detect(img):
     #Detect Faces
+    # img = imutils.resize(img,width=800)
     cropped_faces = []
     face_cascade = cv2.CascadeClassifier("C:/Users/sande/Desktop/CV/sandeep/Data/cascades/haarcascade_frontalface_default.xml")
     eye_cascade = cv2.CascadeClassifier('C:/Users/sande/Desktop/CV/sandeep/Data/cascades/haarcascade_eye.xml')
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # cv2.imshow("skin-isolation",img)
-    # cv2.waitKey(0)  
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  
 
     faces = face_cascade.detectMultiScale(gray)
     for (x,y,w,h) in faces:
@@ -19,11 +19,7 @@ def detect(img):
         eyes = eye_cascade.detectMultiScale(roi_gray)
         if(len(eyes)):
             cropped_faces.append(roi_color)
-            cv2.rectangle(gray,(x,y),(x+w,y+h+15),(255,0,0),2)
-
-    gray = imutils.resize(gray,width=800)
-    count = 0
-    # cv2.imshow('Detected Images',gray)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+            cv2.rectangle(img,(x,y),(x+w,y+h+15),(255,0,0),2)
+    img = imutils.resize(img,width=1000)
+    display(img)
     return cropped_faces
