@@ -22,14 +22,16 @@ def main_common(img,method):
 	image_set = get_img_data(cropped_faces)
 
 	
-	#For each landmark detected image , recognize it by using the csv database
-	for image in image_set:
-		points,skew,laugh,img_shape = image
-		img_data = [method,points,skew,laugh,img_shape]
-		print("Skew:",skew,"\tLaugh:",laugh,end="  ")
-		start_time = time.time()
-		recognized_name.append(recognize(img_data))
-		print("--- %s Seconds ---" % (time.time() - start_time))
+	# #For each landmark detected image , recognize it by using the csv database
+	# for image in image_set:
+	# 	points,skew,laugh,img_shape = image
+	# 	img_data = [method,points,skew,laugh,img_shape]
+	# 	print("Skew:",skew,"\tLaugh:",laugh,end="  ")
+	# 	start_time = time.time()
+	# 	recognized_name.append(recognize(img_data))
+	# 	print(recognized_name[-1])
+	# 	# print("--- %s Seconds ---" % (time.time() - start_time))
+	# 	print()
 
 	# Return the name of the recognized feature
 	return recognized_name

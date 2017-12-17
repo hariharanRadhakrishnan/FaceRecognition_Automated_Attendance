@@ -25,7 +25,7 @@ def wai(template_points,test_points,method,img_shape,name,i):
     start_time = time.time()
     val = hausdorff(template_points,test_points,method,img_shape,name,i)
     print(i,name,val)
-    print("--- %s Seconds ---" % (time.time() - start_time))
+    # print("--- %s Seconds ---" % (time.time() - start_time))
     return [val,name]
 
 

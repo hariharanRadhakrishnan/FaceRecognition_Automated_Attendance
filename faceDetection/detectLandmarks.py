@@ -45,7 +45,7 @@ def get_img_data(cropped_faces):
     for i in cropped_faces:
 
         #Scale the image to needed size
-        i = imutils.resize(i,width=200)
+        i = imutils.resize(i,width=400)
 
         #Detect all feature points(68) 
         points,skew,laugh = face_points(i)
@@ -55,21 +55,21 @@ def get_img_data(cropped_faces):
     return img_data
 
 #Face points for one image only
-def face_points(gray):
+def face_points(img):
     predictor = dlib.shape_predictor("C:/Users/sande/Desktop/CV/sandeep/Data/Landmarks/shape_predictor_68_face_landmarks.dat")
-    b,r = gray.shape[:2]
+    b,r = img.shape[:2]
     rect = dlib.rectangle(left=0,top=0,right=r,bottom=b)
-    points = predictor(gray, rect)
+    points = predictor(img, rect)
     points = face_utils.shape_to_np(points)
 
     face_curve,left_eyebro,right_eyebro,nose,left_eye,right_eye,mouth = points[:17],points[17:22],points[22:27],points[27:36],points[36:42],points[42:48],points[48:68]
     
-    skew = detect_skew(face_curve[1][0],face_curve[-1][0],nose[2][0],gray.shape)
-    laugh = detect_laugh(mouth,gray.shape)
+    skew = detect_skew(face_curve[1][0],face_curve[-1][0],nose[2][0],img.shape)
+    laugh = detect_laugh(mouth,img.shape)
 
     for (x, y) in points:
-        cv2.circle(gray, (x, y), 1, (0, 0, 255), -1)
-
-    display(gray)
+        cv2.circle(img, (x, y), 1, (0, 0, 255), -1)
+    img = onlyFace(img)
+    display(img)
         
     return points.tolist(),skew,laugh
