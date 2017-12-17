@@ -1,7 +1,7 @@
 from .HausdorffMethod import hausdorff
 from .Database import database
 from joblib import Parallel, delayed
-
+import time
 
 #Find the mean of hausdorff list, to remove duplicates
 def mean_key_value_list(l):
@@ -22,8 +22,10 @@ def mean_key_value_list(l):
 
 #Method to handle parallelism
 def wai(template_points,test_points,method,img_shape,name,i):
+    start_time = time.time()
     val = hausdorff(template_points,test_points,method,img_shape,name,i)
     print(i,name,val)
+    print("--- %s Seconds ---" % (time.time() - start_time))
     return [val,name]
 
 
@@ -36,7 +38,7 @@ def recognize(img_data):
 
 
     #Non parallel version
-    if(int(method)==4):
+    if(int(method)==5):
         hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
 
     #Parallel version

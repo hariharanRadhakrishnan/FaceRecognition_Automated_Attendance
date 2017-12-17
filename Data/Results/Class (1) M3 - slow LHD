@@ -2,8 +2,7 @@
  ['Josh', 'Ritthwik', 'Josh', 'Nishanth', 'Ritthwik', 'Kamala', 'Josh', 'Parag', 'Ritthwik', 'Kamala', 'Hari', 'Parag', 'Ritthwik', 'Kamala']
 
 Expected O/P
- ['Unko', 'Unkownnn', 'Unko',  'Nikhil',   'Pradeep', 'Prateek B', 'Unko',
- 'Sandeep', ' Ritthwik', 'Josh', 'Rachan', 'Rhea', 'Parag', 'Kamala', ]
+ ['Unko', 'Unkownnn', 'Unko',  'Nikhil',   'Pradeep', 'Prateek B', 'Unko', 'Sandeep', ' Ritthwik', 'Josh', 'Rachan', 'Rhea', 'Parag', 'Kamala', ]
 
 Logs:
 
@@ -25,10 +24,13 @@ Choose method of Recognition:
 6 Kamala 33.5971089283
 7 Kamala 27.936800191
 8 Nikhil 28.1784794958
-9 Nikhil 29.2733702467                                                             11 Nishanth 40.6539845662
+9 Nikhil 29.2733702467                                                             
+11 Nishanth 40.6539845662
 10 Nishanth 43.0792263538
-12 Nishanth 39.8390448983                                                          13 Nishanth 35.4115425264
-14 Parag 33.7914789464                                                             15 Parag 32.6776497175
+12 Nishanth 39.8390448983                                                          
+13 Nishanth 35.4115425264
+14 Parag 33.7914789464                                                             
+15 Parag 32.6776497175
 16 Parag 35.4262718417
 17 Pradeep 37.5549887216
 19 Pradeep 37.4402975861

@@ -14,10 +14,6 @@ def main_common(img,method):
 
 	recognized_name = []
 
-	#Detect/isolate image based on skin color
-	# img = onlyFace(img)         
-
-
 	#Detect The face/s using facial and eye Haar cascades
 	cropped_faces = detect(img)
 
@@ -44,6 +40,7 @@ def main_Individual(choice):
 		os.system('cls')
 		img = input("\nType test image name: ")
 		img = cv2.imread('Data/images/Test/'+img+'.jpg')
+
 		method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Vornoi Line Hausdroff Distance\nChoose method of Recognition: \n:")
 		
 		print("Recognized name: ",main_common(img,method))

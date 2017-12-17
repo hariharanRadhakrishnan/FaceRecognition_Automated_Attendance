@@ -5,10 +5,11 @@ import copy
 
 def get_delaunay_lineset(points, shapeX, shapeY,name,i) :
 	points = copy.deepcopy(points)
-	rect = (0,0,shapeX,shapeY)
+	rect = (0,0,1000,1000)
 	subdiv = cv2.Subdiv2D(rect);
 	for p in points :
-	    subdiv.insert(tuple(p))
+		# print(p,shapeX+10,shapeY+10)
+		subdiv.insert(tuple(p))
 	triangleList = subdiv.getTriangleList();
 	veronoiLEM = []
 	for t in triangleList :
