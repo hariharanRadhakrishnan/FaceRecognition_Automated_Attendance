@@ -1,5 +1,29 @@
 import lineHausdorffDistance as LHD
+import cv2
 import copy
+
+def get_delaunay_lineset(points, shapeX, shapeY) :
+	points = copy.deepcopy(points)
+	rect = (0,0,shapeX,shapeY)
+	subdiv = cv2.Subdiv2D(rect);
+	for p in points :
+	    subdiv.insert(tuple(p))
+	triangleList = subdiv.getTriangleList();
+	veronoiLEM = []
+	for t in triangleList :
+		pt1 = [t[0], t[1]]
+		pt2 = [t[2], t[3]]
+		pt3 = [t[4], t[5]]
+		line1 = [pt1,pt2]
+		line2 = [pt2,pt3]
+		line3 = [pt1,pt3]
+		if(line1 not in veronoiLEM):
+			veronoiLEM.append(line1)
+		if(line2 not in veronoiLEM):
+			veronoiLEM.append(line2)
+		if(line3 not in veronoiLEM):	
+			veronoiLEM.append(line3)
+	return veronoiLEM
 
 def addFullCurve(points):
 	lineset = []
@@ -47,22 +71,26 @@ def convertString(s):
 	name = x[-1]
 	x = x[:-1]
 	l = [[int(x) for x in i.split()] for i in x]
-	lineset = buildLineset(l)
+	# lineset = buildLineset(l)
+	lineset = get_delaunay_lineset(l,220,220)
 	return lineset,name
 
 def convertToLineSet(s):
-	lineset = buildLineset(s)
+	# lineset = buildLineset(s)
+	lineset = get_delaunay_lineset(s,220,220)
 	return lineset
 
 def run(newData , tp="normal"):
 	if(tp == "normal"):
 		newData = convertToLineSet(newData)
+		print(len(newData),end=' ,')
 		file = open("../imageDatabase/line_edge_maps2.csv",'r')
 		f = file.read()
 		f = f.split('\n')
 		fin = []
 		for i in range(len(f)-1):
 			li, name = convertString(f[i])
-			findDist = LHD.newPrimaryLHD(li,newData)
+			print(len(li))
+			findDist = LHD.primaryLHD(li,newData)
 			fin.append([findDist, name])
 		return fin , min(fin)

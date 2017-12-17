@@ -6,7 +6,7 @@ import facialLandmarks as fl
 import cv2
 import imutils
 
-PATH = '../images/class12.jpg'
+PATH = '../images/test/rhea.jpg'
 
 image = cv2.imread(PATH)
 # cv2.imshow("to be recognized",image)
