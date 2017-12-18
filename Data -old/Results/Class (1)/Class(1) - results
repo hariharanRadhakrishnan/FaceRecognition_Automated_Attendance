@@ -1,0 +1,21 @@
+Before Interpolation
+
+Original : ['unkown', 'unkown', 'unkown', 'Nikhil', 'Pradeep', 'Prateek B', 'unkown', 'Sandeep', 'Josh', 'unkown', 'Rhea', 'Parag', 'Kamala']
+
+Pre Interpolation
+Point HD : ['Hari', 'Josh', 'Rhea', 'Pradeep', 'Kamala', 'Sandeep', 'Nikhil', 'Rhea ', 'Josh', 'Rhea ', 'Nishanth', 'Ritthwik', 'Kamala']
+LHD      : ['Josh', 'Nishanth', 'Josh', 'Nishanth', 'Pradeep', 'Rhea ', 'Rhea ', 'Rhea ', 'Josh', 'Rhea ', 'Pradeep', 'Ritthwik', 'Kamala']
+nVornoi  : ['Ritthwik', 'Vishal', 'Sandeep', 'Pradeep ', 'Nishanth', 'Vishal', 'Nishanth', 'PraB', 'Nishanth', 'Parag', 'Ritthwik', 'Parag', 'PraB ']
+
+
+After Interpolation : INTER_CUBIC
+Point HD : ['Hari', 'Hari', 'Kamala', 'Sandeep', 'Rhea', 'Ritthwik', 'Rhea', 'Rhea ', 'Josh', 'Kamala', 'Rhea ', 'Hari', 'Kamala']
+LHD      : ['Josh', 'Ritthwik', 'Josh', 'Nishanth', 'Pradeep', 'Rhea ', 'Rhea ', 'Rhea ', 'Josh', 'Rhea ', 'Pradeep', 'Ritthwik', 'Kamala']
+nVornoi  : ['Kamala', 'Nikhil', 'Hari', 'Nishanth', 'Vishal', 'Hari', 'Ritthwik', 'Nishanth', 'Sandeep', 'Parag', 'Pradeep', 'Hari', 'Vishal']
+betrVor  : 
+
+
+After Interpolation : INTER_LANCZOS4
+Point HD : ['Hari', 'Hari', 'Kamala', 'Pradeep', 'Nishanth', 'Sandeep', 'Rhea', 'Rhea ', 'Josh', 'Rhea ', 'Nishanth', 'Ritthwik', 'Kamala']
+LHD      : ['Josh', 'Nishanth', 'Josh', 'Nishanth', 'Pradeep', 'Rhea ', 'Rhea ', 'Rhea ', 'Josh', 'Rhea ', 'Pradeep', 'Ritthwik', 'Kamala']
+nVoronoi  : ['Nikhil', 'Rhea ', 'Sandeep', 'Rhea', 'Hari', 'Josh', 'Parag', 'Vishal', 'Sandeep', 'Nishanth', 'Prateek B', 'Ritthwik', 'Prateek GM']

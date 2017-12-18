@@ -3,6 +3,7 @@ from .PointHausdorff import point_hausdorff_distance
 from .NewLineHausdorff import newPrimaryLHD
 from .NewLineHausdorff import primaryLHD
 from .NewLineHausdorff import convert
+from .NewLineHausdorff import buildLineset
 from .Voronoi import get_delaunay_lineset
 import time
 
@@ -32,26 +33,45 @@ def hausdorff(test_points,temp_points,method,shape,name,index):
         temp_lineset = convert(temp_points)
         test_lineset = convert(test_points)
 
-        #Calculate the Line hausdorff distance         
+        #Calculate the Line hausdorff distance        
         distance = newPrimaryLHD(test_lineset,temp_lineset)
 
     #OPTION 4: Obtain voronoi features as a list and find line hausdorff distance
     elif(method==4):
         temp_voronoi_features = get_delaunay_lineset(temp_points,shape[0],shape[1],name,index)
         test_voronoi_features = get_delaunay_lineset(test_points,shape[0],shape[1],name,index)
+
+        #1 - all mapping only
         distance = primaryLHD(temp_voronoi_features,test_voronoi_features)
 
     elif(method==5):
         temp_voronoi_features = get_delaunay_lineset(temp_points,shape[0],shape[1],name,index)
         test_voronoi_features = get_delaunay_lineset(test_points,shape[0],shape[1],name,index)
+        # 1-1 mapping only 
         distance = newPrimaryLHD(temp_voronoi_features,test_voronoi_features)
 
     elif(method==6):
         temp_voronoi_features = get_delaunay_lineset(temp_points,shape[0],shape[1],name,index)
         test_voronoi_features = get_delaunay_lineset(test_points,shape[0],shape[1],name,index)
+        #Choosing mapping
         if(len(temp_voronoi_features)==len(test_points)):
             distance = newPrimaryLHD(temp_voronoi_features,test_voronoi_features)
         else:
             distance = primaryLHD(temp_voronoi_features,test_voronoi_features)
+
+    elif(method==7):
+        temp_voronoi_features = get_delaunay_lineset(temp_points,shape[0],shape[1],name,index)
+        test_voronoi_features = get_delaunay_lineset(test_points,shape[0],shape[1],name,index)
+
+        #Hybrid 1-n mapping
+        n=10
+        distance = newPrimaryLHD(temp_voronoi_features,test_voronoi_features,search=n)
+
+    elif(method==8):
+        temp_lineset = buildLineset(temp_points)
+        test_lineset = buildLineset(test_points)
+
+        #Calculate the Line hausdorff distance        
+        distance = newPrimaryLHD(test_lineset,temp_lineset)
 
     return distance

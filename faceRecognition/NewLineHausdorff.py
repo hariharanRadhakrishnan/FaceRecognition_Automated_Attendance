@@ -211,24 +211,33 @@ def primaryLHD(lineSet1,lineSet2):
 	# print("LHD_values",set1,set2)
 	return max(set1,set2)
 
-def newLHD(lineSet1,lineSet2,p=False):
+def newLHD(lineSet1,lineSet2,p=False,search=1):
 	LHDSum = 0
 	totalLength = 0
 	run_len = min(len(lineSet1),len(lineSet2))
 	for i in range(run_len):
 		line1 = lineSet1[i]
-		line2 = lineSet2[i]
 		line1Len = dist(line1[0],line1[1])
 		totalLength += line1Len
-		LHDval = LHD(line1,line2)
-		LHDSum += line1Len * LHDval
+		boundary1=(i-search//2)
+		boundary2=(i+search//2)+1
+		LHDval = []
+		for j in range(boundary1,boundary2):
+			if(j < 0):
+				continue
+			if(j > len(lineSet2)-1):
+				break
+			line2 = lineSet2[j]			
+			LHDval.append(LHD(line1,line2))
+		LHDSum += line1Len * min(LHDval)		
 		if(p):
 			print(i, line1, line2, LHDval, LHDSum/totalLength)
 	return LHDSum/totalLength
 
-def newPrimaryLHD(lineSet1,lineSet2):
-	set1 = newLHD(lineSet1,lineSet2)
-	set2 = newLHD(lineSet2,lineSet1)
+def newPrimaryLHD(lineSet1,lineSet2,search=1):
+
+	set1 = newLHD(lineSet1,lineSet2,search=search)
+	set2 = newLHD(lineSet2,lineSet1,search=search)
 		
 	
 	return max(set1,set2)

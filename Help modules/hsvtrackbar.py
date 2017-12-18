@@ -41,6 +41,7 @@ def nothing(x):
 cap = cv2.VideoCapture(0)
 time.sleep(5)
 cv2.namedWindow('image', flags=1)
+cv2.resizeWindow('image', 600,600)
 
 # create trackbars for color change
 cv2.createTrackbar('Mn1','image',0,179,nothing)

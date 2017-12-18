@@ -25,7 +25,7 @@ def wai(template_points,test_points,method,img_shape,name,i):
     start_time = time.time()
     val = hausdorff(template_points,test_points,method,img_shape,name,i)
     print(i,name,val)
-    print("--- %s Seconds ---" % (time.time() - start_time))
+    # print("--- %s Seconds ---" % (time.time() - start_time))
     return [val,name]
 
 
@@ -36,9 +36,8 @@ def recognize(img_data):
     
     templates = database(skew,laugh)
 
-
     #Non parallel version
-    #hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
+    # hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
 
     #Parallel version
     hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates)) 
@@ -58,8 +57,7 @@ def recognize(img_data):
     # if(method==1 or method==2):
     #     hausdorff_list = mean_key_value_list(hausdorff_list)
    
-   
+    hausdorff_list.sort()
+    k=3
     #If multiple matches, find the min distance match from the database
-    value,name = min(hausdorff_list)
-
-    return name
+    return [name for _,name in hausdorff_list[:k]]

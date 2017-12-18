@@ -5,7 +5,7 @@ import copy
 
 def get_delaunay_lineset(points, shapeX, shapeY,name,i) :
 	points = copy.deepcopy(points)
-	rect = (0,0,1000,1000)
+	rect = (0,0,3000,3000)
 	subdiv = cv2.Subdiv2D(rect);
 	for p in points :
 		# print(p,shapeX+10,shapeY+10)

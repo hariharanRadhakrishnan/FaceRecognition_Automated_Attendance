@@ -32,7 +32,7 @@ def detect_laugh(mouth,img_size):
     m = [int(abs(i-median)/img_size[1]*1000) for i in mouth]
 
     for i in m:
-        if(i >=100):
+        if(i >=95):
             smile+=1
     if(smile>1):
         return "laugh"
@@ -57,7 +57,7 @@ def get_img_data(cropped_faces):
         #Detect all feature points(68) 
         i,points,skew,laugh = face_points(i)
         # i2,_,_,_ = face_points(i2)
-        # display(i)
+        display(i)
         img_data.append([points,skew,laugh,i.shape])
    
     return img_data

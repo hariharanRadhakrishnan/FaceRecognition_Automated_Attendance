@@ -15,7 +15,7 @@ def database(skew,laugh):
 
     with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/"+file_name) as f:
         #Extract name and points from database
-        lis=[line[:-1].split(',') for line in f]        
+        lis=[line[:-1].split(',') for line in f]
         for i in lis:
             name=i[0]
             points=i[1:]

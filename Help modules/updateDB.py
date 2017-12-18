@@ -24,21 +24,24 @@ def detect(img):
         eyes = eye_cascade.detectMultiScale(roi_color)
         if(len(eyes)):
             cropped_faces.append(roi_color)
-
+            
     return cropped_faces
 
 #Detect if the face is skewed
 def detect_skew(left,right,center,img_size):
-    # -89
     left_ratio = abs(center-left)
     right_ratio = abs(center-right)
 
     diff = int((left_ratio - right_ratio)/img_size[0]*1000)
+    print("Skew:",diff,end=" ")
     if(abs(diff)<=150):
+        print("straight",end="\t")
         return "straight"
     elif(diff>150):
+        print("left",end="\t")
         return "left"
     elif(diff<-150):
+        print("right",end="\t")
         return "right"
 
 #Detect if the face has a laugh
@@ -48,13 +51,18 @@ def detect_laugh(mouth,img_size):
     median = statistics.median(mouth)
     smile = 0
     m = [int(abs(i-median)/img_size[1]*1000) for i in mouth]
-
+    m.sort(reverse=True)
+    print("Laugh:",m[:2],end=" ")
     for i in m:
-        if(i >=100):
-            smile+=1
+        if(i < 95):
+            break
+        smile+=1
+    
     if(smile>1):
+        print("Yes")
         return "laugh"
     else:
+        print("No")
         return "normal"
 
 #Face points for one image only
@@ -72,9 +80,9 @@ def face_points(img):
     
     for (x, y) in points:
         cv2.circle(img, (x, y), 1, (0, 0, 255), -1)
-    # cv2.imshow(str(skew)+" "+str(laugh),img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow(str(skew)+" "+str(laugh),img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
         
     return points.tolist(),skew,laugh
 
@@ -83,8 +91,13 @@ def get_image_data(cropped_faces):
     img_data = []
     for i in cropped_faces:
     	        
+        height, width = i.shape[:2]
+
+        # print(height,width,"\t",200, (200*height)/width)
+        i = cv2.resize(i,(200, int((200*height)/width)),interpolation=cv2.INTER_CUBIC)
+       
         #Scale the image to needed size
-        i = imutils.resize(i,width=200)
+        # i = imutils.resize(i,width=200)
 
         #Detect all feature points(68) 
         points,skew,laugh = face_points(i)  
@@ -110,46 +123,53 @@ def process(img,name,file):
     filename=''
 
     # #Detect/isolate image based on skin color
-    # img = onlyFace(img)
+    img = onlyFace(img)
 
+    # i = img.copy()
+    # i = imutils.resize(i,width=200)
+    # cv2.imshow("skin",i)  
+    # cv2.waitKey(0)  
 
     #Detect The face/s using facial and eye Haar cascades
     cropped_faces = detect(img)
 
+    
 
     #Detect the facial landmarks on the detected face using dlib data
     image_set = get_image_data(cropped_faces)
 
 
-    for image in image_set:
-        point,skew,laugh,img_shape = image
+    # for image in image_set:
+    #     point,skew,laugh,img_shape = image
 
-        if(skew=="left"):
-            filename="LEFT_DB.csv"
-            os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LEFT/"+file)
-        elif(skew=="right"):
-            os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/RIGHT/"+file)
-            filename="RIGHT_DB.csv"
-        else:
-            if(laugh=="laugh"):
-                os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LAUGH/"+file)
-                filename="LAUGH_DB.csv"
-            else:
-                os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/NORMAL/"+file)
-                filename="NORMAL_DB.csv"
-        print(filename)
-        write_csv(name,point,filename)
+    #     if(skew=="left"):
+    #         filename="LEFT_DB.csv"
+    #         os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LEFT/"+file)
+    #     elif(skew=="right"):
+    #         os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/RIGHT/"+file)
+    #         filename="RIGHT_DB.csv"
+    #     else:
+    #         if(laugh=="laugh"):
+    #             os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LAUGH/"+file)
+    #             filename="LAUGH_DB.csv"
+    #         else:
+    #             os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/NORMAL/"+file)
+    #             filename="NORMAL_DB.csv"
+    #     print(filename)
+    #     write_csv(name,point,filename)
     
 
 def main():
-	count =0 
-	for file in os.listdir('../Data/images/original'):
-		print(file,end=" ")
-		if(file.endswith('.jpg')):
-			name, ext = os.path.splitext(file)
-			img = cv2.imread(os.path.join("../Data/images/original",file))
-            		      
-			process(img,name[:-4],file)
+    count =0 
+    # for file in os.listdir('../Data/images/original'):
+    for file in os.listdir('../Data/images/group'):
+        if(file.endswith('.jpg')):
+            name, ext = os.path.splitext(file)
+            img = cv2.imread(os.path.join("../Data/images/group",file))
+            print(name)
+            name = name.split()	
+            	      
+            process(img,name[0],file)
     
    
 if __name__ == "__main__":
