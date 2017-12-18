@@ -71,26 +71,32 @@ def convertString(s):
 	name = x[-1]
 	x = x[:-1]
 	l = [[int(x) for x in i.split()] for i in x]
+	lineset = addFullCurve(l)
 	# lineset = buildLineset(l)
-	lineset = get_delaunay_lineset(l,220,220)
+	# lineset = get_delaunay_lineset(l,220,220)
 	return lineset,name
 
 def convertToLineSet(s):
+	lineset = addFullCurve(s)
 	# lineset = buildLineset(s)
-	lineset = get_delaunay_lineset(s,220,220)
+	# lineset = get_delaunay_lineset(s,220,220)
 	return lineset
 
 def run(newData , tp="normal"):
 	if(tp == "normal"):
 		newData = convertToLineSet(newData)
-		print(len(newData),end=' ,')
+		# print("Test :: ")
+		# print(newData)
+		# print(len(newData),end=' ,')
 		file = open("../imageDatabase/line_edge_maps2.csv",'r')
 		f = file.read()
 		f = f.split('\n')
 		fin = []
 		for i in range(len(f)-1):
 			li, name = convertString(f[i])
-			print(len(li))
-			findDist = LHD.primaryLHD(li,newData)
+			# print(name + ' ::')
+			# print(li)
+			# print(len(li))
+			findDist = LHD.newPrimaryLHD(li,newData)
 			fin.append([findDist, name])
 		return fin , min(fin)

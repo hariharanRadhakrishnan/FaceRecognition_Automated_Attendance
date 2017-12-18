@@ -6,27 +6,31 @@ import facialLandmarks as fl
 import cv2
 import imutils
 
-PATH = '../images/test/rhea.jpg'
+PATH = '../images/san.jpg'
 
 image = cv2.imread(PATH)
 # cv2.imshow("to be recognized",image)
 # cv2.waitKey(0)
 
 face_images = fd.getFaces(image)
-print(len(face_images))
+# print(len(face_images))
 output = 1
 for i in face_images:
 	i_copy = i.copy()
-	i_copy = imutils.resize(i_copy,width=200)
+	i_copy = cv2.resize(i_copy,dsize = 200)
 	i_copy, shape = fl.face_points(i_copy)
+	print(list(shape))
+	# cv2.namedWindow("window")
+	# cv2.moveWindow("window",40,30)
 	cv2.imshow(str(output),i_copy)
+	cv2.waitKey(0)
 	output += 1
 	recognized, minmum = lhd.run(shape)
-	# for i in recognized:
-	# 	print(i)
+	for i in recognized:
+		print(i)
 	# if(minmum[0] < 5):
 	print(output-1,minmum)
 	# else:
 		# print(output-1,"Not recognized")
 
-cv2.waitKey(0)
+# cv2.waitKey(0)
