@@ -47,7 +47,8 @@ def buildLineset(shape):
 
 def convert(s):
 	l = [[int(x) for x in i.split()] for i in s.split(',')]
-	lineset = buildLineset(l)
+	# lineset = buildLineset(l)
+	lineset = addFullCurve(l)
 	return lineset
 
 def penalty(angle):
@@ -100,41 +101,39 @@ def getSlope(x,y):
 	else:
 		return math.atan(y/x)
 
-def rotate(line1,line2,length,angle):
+def sortLine(line):
+	x_diff = line[0][0] - line[1][0]
+	y_diff = line[0][1] - line[1][1]
+	lineSwap = False
+	if(x_diff > 0):
+		lineSwap = True
+	elif(x_diff == 0):
+		if(y_diff < 0):
+			lineSwap = True
+	if(lineSwap):
+		return line[::-1]
+	return line
+
+def rotate(line1, length, angle):
 	if(angle == 0.0):
 		return line1
-	slope1 = getSlope(line1[1][0]-line1[0][0],line1[1][1] - line1[0][1])
-	slope2 = getSlope(line2[1][0]-line2[0][0],line2[1][1] - line2[0][1])
-	rotate_angle = (math.pi/2) - max(slope1,slope2) + (angle/2)
-	# print("Slope 1 : ",slope1, " slope2 : ",slope2 , length, math.degrees(angle))
-	# print("Angle to rotate_angle", math.degrees(rotate_angle))
-	delta_y = length * math.sin(angle/2) * math.sin(rotate_angle)
-	delta_x = length * math.sin(angle/2) * math.cos(rotate_angle)
-	# print(delta_x,delta_y)
-	# print(slope1,slope2)
-	if(slope1 < slope2):
-		if(line1[0][0] - line1[1][0] < 0 or line1[0][1] - line1[1][1] < 0):
-			line1[0][0] += delta_x
-			line1[0][1] -= delta_y
-			line1[1][0] -= delta_x
-			line1[1][1] += delta_y
-		else:
-			line1[0][0] -= delta_x
-			line1[0][1] += delta_y
-			line1[1][0] += delta_x
-			line1[1][1] -= delta_y
-	elif(slope1 > slope2):
-		if(line1[0][0] - line1[1][0] < 0 or line1[0][1] - line1[1][1] < 0):
-			line1[0][0] -= delta_x
-			line1[0][1] += delta_y
-			line1[1][0] += delta_x
-			line1[1][1] -= delta_y
-		else:
-			line1[0][0] += delta_x
-			line1[0][1] -= delta_y
-			line1[1][0] -= delta_x
-			line1[1][1] += delta_y
-	return line1
+	midPointX = (line1[0][0] + line1[1][0])/2
+	midPointY = (line1[0][1] + line1[1][1])/2
+	
+	line1[0][0] = line1[0][0] - midPointX
+	line1[1][0] = line1[1][0] - midPointX
+	line1[0][1] = line1[0][1] - midPointY
+	line1[1][1] = line1[1][1] - midPointY
+
+	slope1 = getSlope(line1[1][0]-line1[0][0],line1[1][1]-line1[0][1])
+
+	newAngle = slope1 + angle
+	newX2 = length/2 * math.cos(newAngle)
+	newY2 = length/2 * math.sin(newAngle)
+	newX1 = length/2 * math.cos(math.pi + newAngle)
+	newY1 = length/2 * math.sin(math.pi + newAngle)
+
+	return [[newX1 + midPointX,newY1 + midPointY],[newX2 + midPointX,newY2 + midPointY]]
 
 def findAngleDiff(line1,line2):
 	# print(line1,line2)
@@ -142,29 +141,32 @@ def findAngleDiff(line1,line2):
 	slope2 = getSlope(line2[1][0]-line2[0][0],line2[1][1]-line2[0][1])
 	# print(math.degrees(slope1),math.degrees(slope2))
 	angleDiff = slope2 - slope1
-	return abs(angleDiff)
+	return angleDiff
 
 def LHD(line1,line2):
-	# print(line1,line2)
+	# print(line1, line2)
+	line11 = copy.deepcopy(line1)
+	line21 = copy.deepcopy(line2)
 	line1 = copy.deepcopy(line1)
 	line2 = copy.deepcopy(line2)
-
 	angleDiff = findAngleDiff(line1,line2)
-	# print("angleDiff :: ",math.degrees(angleDiff))
+	# print("angleDiff :: ", math.degrees(angleDiff))
+	line1 = sortLine(line1)
+	line2 = sortLine(line2)	
 	
-	line1Vect = np.array([line1[1][0]-line1[0][0],line1[1][1] - line1[0][1]])
-	line2Vect = np.array([line2[1][0]-line2[0][0],line2[1][1] - line2[0][1]])
-	vec1Len = np.linalg.norm(line1Vect)
-	vec2Len = np.linalg.norm(line2Vect)
-	# print("Before :: ",line1,line2)
+	vec1Len = dist(line1[0],line1[1])
+	vec2Len = dist(line2[0],line2[1])
+	# print("Before :: ",line1,line2,vec1Len,vec2Len)
 	if(vec1Len < vec2Len):
 		# print("Path 1")
-		line1 = rotate(line1, line2, vec1Len, angleDiff)
+		line1 = rotate(line1, vec1Len, angleDiff)
 	else:
 		# print("Path 2")
-		line2 = rotate(line2, line1, vec2Len, angleDiff)
-	# print("After :: ",line1,line2)
-	# print("Angle Difference :: ", math.degrees(findAngleDiff(line1,line2)),end = "\n\n")
+		line2 = rotate(line2, vec2Len, -angleDiff)
+	# print("\tAfter :: ",line1,line2,end=" ")
+	# print("Angle Difference :: ", math.degrees(int(findAngleDiff(line1,line2))),end = " ")
+	if(int(findAngleDiff(line1,line2)) != 0):
+		print(line11,line21,math.degrees(findAngleDiff(line1,line2)))
 	slope = getSlope(line1[1][0]-line1[0][0],line1[1][1] - line1[0][1]) + getSlope(line2[1][0]-line2[0][0],line2[1][1] - line2[0][1])
 	slope /= 2
 	points = closePoints(line1,line2)
@@ -180,7 +182,9 @@ def LHD(line1,line2):
 	parDist = min(parDist)
 	# print("Parallel Distance : ",parDist)
 	# print(line1,line2)
-	return (penalty(angleDiff)**4 + perDist**4 + parDist**4 )**0.25
+	value = (penalty(angleDiff)**2 + perDist**2 + parDist**2 )**0.5
+	# print("LHD :: ", value)
+	return value
 	# print(perDist)
 
 def LHD_set_lines(lineSet1,lineSet2,p=False):
@@ -195,7 +199,7 @@ def LHD_set_lines(lineSet1,lineSet2,p=False):
 			for i in range(len(l)):
 				print(lineSet2[i], " :: ", l[i])
 			print("______________________________", line1Len, min(l), l.index(min(l)), lineSet2[l.index(min(l))],"______________________________")
-		LHDSum += line1Len * min(l)
+		LHDSum += line1Len * max(l)
 	if(p):
 		print("______________________________________________________________________________________")
 	return LHDSum/totalLength
@@ -203,12 +207,14 @@ def LHD_set_lines(lineSet1,lineSet2,p=False):
 def primaryLHD(lineSet1,lineSet2):
 	set1 = LHD_set_lines(lineSet1,lineSet2)
 	set2 = LHD_set_lines(lineSet2,lineSet1)
+	# print("LHD_values",set1,set2)
 	return max(set1,set2)
 
 def newLHD(lineSet1,lineSet2,p=False):
 	LHDSum = 0
 	totalLength = 0
-	for i in range(len(lineSet1)):
+	run_len = min(len(lineSet1),len(lineSet2))
+	for i in range(run_len):
 		line1 = lineSet1[i]
 		line2 = lineSet2[i]
 		line1Len = dist(line1[0],line1[1])
@@ -216,7 +222,7 @@ def newLHD(lineSet1,lineSet2,p=False):
 		LHDval = LHD(line1,line2)
 		LHDSum += line1Len * LHDval
 		if(p):
-			print(line1, line2, LHDval, LHDSum)
+			print(i, line1, line2, LHDval, LHDSum/totalLength)
 	return LHDSum/totalLength
 
 def newPrimaryLHD(lineSet1,lineSet2):
@@ -224,11 +230,21 @@ def newPrimaryLHD(lineSet1,lineSet2):
 	set2 = newLHD(lineSet2,lineSet1)
 	return max(set1,set2)
 
-# lineSet1 = convert(input())
+# a = [[1,1],[-1,-1]]
+# print(dist(a[0],a[1]))
+# degrees = -45
+# b = rotate(a,dist(a[0],a[1]),math.radians(degrees))
+# print(b)
+# print(dist(b[0],b[1]))
+
+# print(math.degrees(findAngleDiff(a,b)))
+
+ 
+# lineSet1 = addFullCurve(eval(input()))
 # lineSet2 = convert(input())
 
 # print(newPrimaryLHD(lineSet1,lineSet2))
-# print(primaryLHD(lineSet1,lineSet2))
+# # # print(primaryLHD(lineSet1,lineSet2))
 
 # fig=plt.figure()
 # ax=fig.add_subplot(111)
@@ -244,9 +260,9 @@ def newPrimaryLHD(lineSet1,lineSet2):
 # 	    *zip(*itertools.chain.from_iterable(itertools.combinations(l, 2))),
 # 	    color = 'red', marker = 'o')
 
-# for l in lineSet3:
-# 	plt.plot(
-# 	    *zip(*itertools.chain.from_iterable(itertools.combinations(l, 2))),
-# 	    color = 'green', marker = 'o')
+# # for l in lineSet3:
+# # 	plt.plot(
+# # 	    *zip(*itertools.chain.from_iterable(itertools.combinations(l, 2))),
+# # 	    color = 'green', marker = 'o')
 
 # plt.show()
