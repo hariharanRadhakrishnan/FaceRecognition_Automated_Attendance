@@ -13,7 +13,7 @@ def onlyFace(img):
 
 
 	lower = np.array([0, 30, 30], dtype = "uint8")
-	upper = np.array([55, 255, 255], dtype = "uint8")
+	upper = np.array([155, 255, 255], dtype = "uint8")
 
 
 	converted = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)

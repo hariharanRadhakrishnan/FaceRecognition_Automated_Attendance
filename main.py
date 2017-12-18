@@ -23,15 +23,15 @@ def main_common(img,method):
 
 	
 	# #For each landmark detected image , recognize it by using the csv database
-	# for image in image_set:
-	# 	points,skew,laugh,img_shape = image
-	# 	img_data = [method,points,skew,laugh,img_shape]
-	# 	print("Skew:",skew,"\tLaugh:",laugh,end="  ")
-	# 	start_time = time.time()
-	# 	recognized_name.append(recognize(img_data))
-	# 	print(recognized_name[-1])
-	# 	# print("--- %s Seconds ---" % (time.time() - start_time))
-	# 	print()
+	for image in image_set:
+		points,skew,laugh,img_shape = image
+		img_data = [method,points,skew,laugh,img_shape]
+		print("Skew:",skew,"\tLaugh:",laugh)
+		start_time = time.time()
+		recognized_name.append(recognize(img_data))
+		print(recognized_name[-1])
+		print("--- %s Seconds ---" % (time.time() - start_time))
+		print()
 
 	# Return the name of the recognized feature
 	return recognized_name
@@ -43,7 +43,7 @@ def main_Individual(choice):
 		img = input("\nType test image name: ")
 		img = cv2.imread('Data/images/Test/'+img+'.jpg')
 
-		method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Vornoi Line Hausdroff Distance\nChoose method of Recognition: \n:")
+		method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Vornoi LHD\n5.New Voronoi LHD\n6.Enchanced Vornoi LHD\nChoose method of Recognition: \n:")
 		
 		print("Recognized name: ",main_common(img,method))
 
@@ -53,7 +53,7 @@ def main_Individual(choice):
 def main_All():
 	count_correct =0
 	count_incorrect =0
-	method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Voronoi Line Hausdroff Distance\nChoose method of Recognition: \n:")
+	method = input("\n1.68 Point-Hausdroff Distance\n2.Feature Point Hausdroff Distance\n3.Feature Line Hausdroff Distance\n4.Voronoi LHD\n5.New Voronoi LHD\n6.Enchanced Vornoi LHD\nChoose method of Recognition: \n:")
 	os.system('cls')
 	for file in os.listdir('Data/images/Test'):
 		if(file.endswith('.jpg')):

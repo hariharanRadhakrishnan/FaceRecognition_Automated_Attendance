@@ -2,6 +2,7 @@ import copy
 import cv2
 import imutils
 from .Display import display
+from .detectSkinColor import onlyFace
 
 #Detect Faces
 def detect(img):
@@ -17,5 +18,6 @@ def detect(img):
         if(len(eyes)):
             cropped_faces.append(roi_color)
             cv2.rectangle(img,(x,y),(x+w,y+h+15),(255,0,0),2)
-    display(img)
+    # img = onlyFace(img)
+    # display(img)
     return cropped_faces

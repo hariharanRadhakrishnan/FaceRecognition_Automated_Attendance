@@ -1,7 +1,8 @@
 from .FeatureBuild import build_dlib_features
 from .PointHausdorff import point_hausdorff_distance
-from .LineHausdorff import primaryLHD
-from .LineHausdorff import convert
+from .NewLineHausdorff import newPrimaryLHD
+from .NewLineHausdorff import primaryLHD
+from .NewLineHausdorff import convert
 from .Voronoi import get_delaunay_lineset
 import time
 
@@ -32,14 +33,25 @@ def hausdorff(test_points,temp_points,method,shape,name,index):
         test_lineset = convert(test_points)
 
         #Calculate the Line hausdorff distance         
-        distance = primaryLHD(test_lineset,temp_lineset)
+        distance = newPrimaryLHD(test_lineset,temp_lineset)
 
     #OPTION 4: Obtain voronoi features as a list and find line hausdorff distance
     elif(method==4):
         temp_voronoi_features = get_delaunay_lineset(temp_points,shape[0],shape[1],name,index)
         test_voronoi_features = get_delaunay_lineset(test_points,shape[0],shape[1],name,index)
-
-        #Calculate the Line hausdorff distance
         distance = primaryLHD(temp_voronoi_features,test_voronoi_features)
+
+    elif(method==5):
+        temp_voronoi_features = get_delaunay_lineset(temp_points,shape[0],shape[1],name,index)
+        test_voronoi_features = get_delaunay_lineset(test_points,shape[0],shape[1],name,index)
+        distance = newPrimaryLHD(temp_voronoi_features,test_voronoi_features)
+
+    elif(method==6):
+        temp_voronoi_features = get_delaunay_lineset(temp_points,shape[0],shape[1],name,index)
+        test_voronoi_features = get_delaunay_lineset(test_points,shape[0],shape[1],name,index)
+        if(len(temp_voronoi_features)==len(test_points)):
+            distance = newPrimaryLHD(temp_voronoi_features,test_voronoi_features)
+        else:
+            distance = primaryLHD(temp_voronoi_features,test_voronoi_features)
 
     return distance

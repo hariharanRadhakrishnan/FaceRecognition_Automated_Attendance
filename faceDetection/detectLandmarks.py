@@ -45,11 +45,19 @@ def get_img_data(cropped_faces):
     for i in cropped_faces:
 
         #Scale the image to needed size
-        i = imutils.resize(i,width=400)
+        # i = imutils.resize(i,width=200)
 
+        height, width = i.shape[:2]
+
+        # print(height,width,"\t",200, (200*height)/width)
+        i = cv2.resize(i,(200, int((200*height)/width)),interpolation=cv2.INTER_CUBIC)
+        #We use Interoplolation to resize
+        # i = cv2.resize(i,(200, int((200*height)/width)),interpolation=cv2.INTER_LANCZOS4)
+        
         #Detect all feature points(68) 
-        points,skew,laugh = face_points(i)
-
+        i,points,skew,laugh = face_points(i)
+        # i2,_,_,_ = face_points(i2)
+        # display(i)
         img_data.append([points,skew,laugh,i.shape])
    
     return img_data
@@ -69,7 +77,7 @@ def face_points(img):
 
     for (x, y) in points:
         cv2.circle(img, (x, y), 1, (0, 0, 255), -1)
-    img = onlyFace(img)
-    display(img)
+    # img = onlyFace(img)
+    
         
-    return points.tolist(),skew,laugh
+    return img,points.tolist(),skew,laugh

@@ -25,7 +25,7 @@ def wai(template_points,test_points,method,img_shape,name,i):
     start_time = time.time()
     val = hausdorff(template_points,test_points,method,img_shape,name,i)
     print(i,name,val)
-    # print("--- %s Seconds ---" % (time.time() - start_time))
+    print("--- %s Seconds ---" % (time.time() - start_time))
     return [val,name]
 
 
@@ -38,14 +38,10 @@ def recognize(img_data):
 
 
     #Non parallel version
-    if(int(method)==5):
-        hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
+    #hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]
 
     #Parallel version
-    else:
-        
-        print("not here")
-        hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates)) 
+    hausdorff_list =  Parallel(n_jobs=-1)(delayed(wai)(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates)) 
 
 
     #Remove all hausdorff values which ae greater than threshold as they are not present in out database , supposed to be done in LHD
