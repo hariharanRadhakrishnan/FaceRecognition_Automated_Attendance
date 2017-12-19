@@ -30,11 +30,11 @@ def wai(template_points,test_points,method,img_shape,name,i):
 
 
 #Recognize the detected image
-def recognize(img_data):
+def recognize(img_data,gr):
     method,test_points,skew,laugh,img_shape = img_data
     hausdorff_list=[]
     
-    templates = database(skew,laugh)
+    templates = database(skew,laugh,gr)
 
     #Non parallel version
     # hausdorff_list = [ wai(template_points,test_points,method,img_shape,name,i) for i,(name,template_points) in enumerate(templates) ]

@@ -16,15 +16,16 @@ def detect(img):
     cropped_faces = []
     face_cascade = cv2.CascadeClassifier('cascades/haarcascade_frontalface_default.xml')
     eye_cascade = cv2.CascadeClassifier('cascades/haarcascade_eye.xml')
+    mouth_cascade = cv2.CascadeClassifier('cascades/haarcascade_mcs_mouth.xml')
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY);
-    faces = face_cascade.detectMultiScale(img,1.1,7)
+    faces = face_cascade.detectMultiScale(img,1.1,5)
     for (x,y,w,h) in faces:
         roi_color = copy.copy(img[y:y+h, x:x+w])
         roi_color=onlyFace(roi_color)
         eyes = eye_cascade.detectMultiScale(roi_color)
-        if(len(eyes)):
+        mouth = mouth_cascade.detectMultiScale(roi_color)
+        if(len(eyes) and len(mouth)):
             cropped_faces.append(roi_color)
-            
     return cropped_faces
 
 #Detect if the face is skewed
@@ -66,10 +67,13 @@ def detect_laugh(mouth,img_size):
         return "normal"
 
 #Face points for one image only
-def face_points(img):
+def face_points(img,dis='a'):
     predictor = dlib.shape_predictor("facial-landmarks/shape_predictor_68_face_landmarks.dat")
     b,r = img.shape[:2]
     rect = dlib.rectangle(left=0,top=0,right=r,bottom=b)
+    
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY);
+
     points = predictor(img, rect)
     points = face_utils.shape_to_np(points)
 
@@ -80,30 +84,49 @@ def face_points(img):
     
     for (x, y) in points:
         cv2.circle(img, (x, y), 1, (0, 0, 255), -1)
-    cv2.imshow(str(skew)+" "+str(laugh),img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    if(dis=='d'):
+        cv2.imshow(str(skew)+" "+str(laugh),img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         
     return points.tolist(),skew,laugh
 
 #For all detected images, store the (feature image,shape)
 def get_image_data(cropped_faces):
     img_data = []
-    for i in cropped_faces:
-    	        
-        height, width = i.shape[:2]
+    if(len(cropped_faces)==1):
+        for i in cropped_faces:
 
-        # print(height,width,"\t",200, (200*height)/width)
-        i = cv2.resize(i,(200, int((200*height)/width)),interpolation=cv2.INTER_CUBIC)
-       
-        #Scale the image to needed size
-        # i = imutils.resize(i,width=200)
+            height, width = i.shape[:2]
 
-        #Detect all feature points(68) 
-        points,skew,laugh = face_points(i)  
+            # print(height,width,"\t",200, (200*height)/width)
+            i = cv2.resize(i,(200, int((200*height)/width)),interpolation=cv2.INTER_CUBIC)
+           
+            #Scale the image to needed size
+            # i = imutils.resize(i,width=200)
 
-        
-        img_data.append([points,skew,laugh,i.shape])
+            #Detect all feature points(68) 
+            points,skew,laugh = face_points(i)  
+
+            
+            img_data.append([points,skew,laugh,i.shape])
+    else:
+        for i in cropped_faces:
+
+            height, width = i.shape[:2]
+
+            # print(height,width,"\t",200, (200*height)/width)
+            i = cv2.resize(i,(200, int((200*height)/width)),interpolation=cv2.INTER_CUBIC)
+           
+            #Scale the image to needed size
+            # i = imutils.resize(i,width=200)
+
+            #Detect all feature points(68) 
+            points,skew,laugh = face_points(i,'d')  
+
+            choice = input("Yes/No:")
+            if(choice=='Yes'):
+                img_data.append([points,skew,laugh,i.shape])
    
     return img_data
 
@@ -123,10 +146,10 @@ def process(img,name,file):
     filename=''
 
     # #Detect/isolate image based on skin color
-    img = onlyFace(img)
+    # img = onlyFace(img)
 
     # i = img.copy()
-    # i = imutils.resize(i,width=200)
+    # i = imutils.resize(i,width=400)
     # cv2.imshow("skin",i)  
     # cv2.waitKey(0)  
 
@@ -138,37 +161,40 @@ def process(img,name,file):
     #Detect the facial landmarks on the detected face using dlib data
     image_set = get_image_data(cropped_faces)
 
+    # names = input("Enter Names: ")
+    # names = names.split()
 
-    # for image in image_set:
-    #     point,skew,laugh,img_shape = image
+    for i,image in enumerate(image_set):
+        point,skew,laugh,img_shape = image
 
-    #     if(skew=="left"):
-    #         filename="LEFT_DB.csv"
-    #         os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LEFT/"+file)
-    #     elif(skew=="right"):
-    #         os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/RIGHT/"+file)
-    #         filename="RIGHT_DB.csv"
-    #     else:
-    #         if(laugh=="laugh"):
-    #             os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LAUGH/"+file)
-    #             filename="LAUGH_DB.csv"
-    #         else:
-    #             os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/NORMAL/"+file)
-    #             filename="NORMAL_DB.csv"
-    #     print(filename)
-    #     write_csv(name,point,filename)
+        if(skew=="left"):
+            filename="LEFT_DB.csv"
+            os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LEFT/"+file)
+        elif(skew=="right"):
+            os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/RIGHT/"+file)
+            filename="RIGHT_DB.csv"
+        else:
+            if(laugh=="laugh"):
+                os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/LAUGH/"+file)
+                filename="LAUGH_DB.csv"
+            else:
+                os.rename("C:/Users/sande/Desktop/CV/sandeep/Data/images/original/"+file, "C:/Users/sande/Desktop/CV/sandeep/Data/images/NORMAL/"+file)
+                filename="NORMAL_DB.csv"
+        print(filename)
+        # if(not (names[i]=='n')):
+        write_csv(name,point,filename)
+        
     
 
 def main():
     count =0 
     # for file in os.listdir('../Data/images/original'):
-    for file in os.listdir('../Data/images/group'):
+    for file in os.listdir('../Data/images/original'):
         if(file.endswith('.jpg')):
             name, ext = os.path.splitext(file)
-            img = cv2.imread(os.path.join("../Data/images/group",file))
+            img = cv2.imread(os.path.join("../Data/images/original",file))
             print(name)
-            name = name.split()	
-            	      
+            name = name.split()
             process(img,name[0],file)
     
    

@@ -21,14 +21,16 @@ def main_common(img,method):
 	#Detect the facial landmarks on the detected face using dlib data
 	image_set = get_img_data(cropped_faces)
 
-	
+	names_list = []
 	#For each landmark detected image , recognize it by using the csv database
+
+	gr = input("Is it a group image?:")
 	for image in image_set:
 		points,skew,laugh,img_shape = image
 		img_data = [method,points,skew,laugh,img_shape]
 		print("Skew:",skew,"\tLaugh:",laugh)
 		start_time = time.time()
-		names_list = recognize(img_data)
+		names_list = recognize(img_data,gr)
 		
 		
 			

@@ -54,10 +54,11 @@ def get_img_data(cropped_faces):
         #We use Interoplolation to resize
         # i = cv2.resize(i,(200, int((200*height)/width)),interpolation=cv2.INTER_LANCZOS4)
         
+        i = onlyFace(i)
         #Detect all feature points(68) 
         i,points,skew,laugh = face_points(i)
         # i2,_,_,_ = face_points(i2)
-        display(i)
+        # display(i)
         img_data.append([points,skew,laugh,i.shape])
    
     return img_data

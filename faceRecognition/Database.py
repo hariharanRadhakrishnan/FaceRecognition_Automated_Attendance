@@ -1,4 +1,4 @@
-def database(skew,laugh):
+def database(skew,laugh,gr):
     #Extract content from database
     templates = []
     file_name =""
@@ -13,13 +13,24 @@ def database(skew,laugh):
         file_name="RIGHT_DB.csv"
     # file_name = "skewskinpointsnew.csv"
 
-    with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/"+file_name) as f:
-        #Extract name and points from database
-        lis=[line[:-1].split(',') for line in f]
-        for i in lis:
-            name=i[0]
-            points=i[1:]
-            points=[[int(x) for x in p.split()] for p in points]
-            templates.append([name,points])
+    if(gr=="group"):
+        with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/group/"+file_name) as f:
+            #Extract name and points from database
+            lis=[line[:-1].split(',') for line in f]
+            for i in lis:
+                name=i[0]
+                points=i[1:]
+                points=[[int(x) for x in p.split()] for p in points]
+                templates.append([name,points])
+    else:
+        with open("C:/Users/sande/Desktop/CV/sandeep/Data/database/"+file_name) as f:
+            #Extract name and points from database
+            lis=[line[:-1].split(',') for line in f]
+            for i in lis:
+                name=i[0]
+                points=i[1:]
+                points=[[int(x) for x in p.split()] for p in points]
+                templates.append([name,points])
+    
     return templates
 
