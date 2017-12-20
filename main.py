@@ -24,7 +24,8 @@ def main_common(img,method):
 	names_list = []
 	#For each landmark detected image , recognize it by using the csv database
 
-	gr = input("Is it a group image?:")
+	# gr = input("Is it a group image?:")
+	gr=""
 	for image in image_set:
 		points,skew,laugh,img_shape = image
 		img_data = [method,points,skew,laugh,img_shape]
